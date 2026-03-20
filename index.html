@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" id="themeColor" content="#0a0a0a">
+<title>MijnTuin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================
+   DESIGN SYSTEM: Uber-precision x Facebook-warmth
+   Dark mode default, light mode optional
+   ===================================================== */
+:root{
+  /* Uber-zwart fundament */
+  --bg:#0a0a0a;
+  --bg1:#141414;
+  --bg2:#1c1c1c;
+  --bg3:#242424;
+  --bg4:#2e2e2e;
+  /* Borders */
+  --bor:rgba(255,255,255,.08);
+  --bor2:rgba(255,255,255,.13);
+  --bor3:rgba(255,255,255,.2);
+  /* Surfaces */
+  --sur:rgba(255,255,255,.04);
+  --sur2:rgba(255,255,255,.07);
+  --sur3:rgba(255,255,255,.11);
+  /* Text — Inter bold hierarchy */
+  --t0:#ffffff;
+  --t1:#e4e4e4;
+  --t2:#a0a0a0;
+  --t3:#606060;
+  --t4:#383838;
+  /* Accent — Facebook-inspired blue + groen */
+  --acc:#06c167; /* Uber groen */
+  --acc2:#05a558;
+  --accl:#1db954;
+  --acll:#4ade80;
+  --blue:#1877f2; /* Facebook blauw */
+  --blue2:#166fe5;
+  --bluel:#4293f5;
+  /* Task kleuren */
+  --cw:#3b82f6;--cs:#8b5cf6;--cf:#f59e0b;--cm:#10b981;--ck:#a3714a;--cb2:#ef4444;--cov:#84cc16;
+  --danger:#ef4444;--warn:#f59e0b;
+  /* Radii */
+  --r:12px;--r2:16px;--r3:20px;--rs:8px;
+  /* Safe areas */
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+html.lm{
+  --bg:#f0f2f5; /* Facebook licht grijs */
+  --bg1:#ffffff;
+  --bg2:#f7f8fa;
+  --bg3:#ebedf0;
+  --bg4:#dfe1e5;
+  --bor:rgba(0,0,0,.1);--bor2:rgba(0,0,0,.15);--bor3:rgba(0,0,0,.22);
+  --sur:rgba(0,0,0,.03);--sur2:rgba(0,0,0,.055);--sur3:rgba(0,0,0,.09);
+  --t0:#050505;--t1:#1c1e21;--t2:#606770;--t3:#8a8d91;--t4:#bec3c9;
+  --acc:#06c167;--acc2:#05a558;--accl:#059950;--acll:#06c167;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t0);font-family:'Inter',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+button{background:none;border:none;cursor:pointer;font-family:inherit;color:inherit}
+input,select,textarea{font-family:'Inter',sans-serif;color:var(--t0);background:var(--bg2)}
+
+/* ======== LAYOUT ======== */
+#wrap{
+  position:fixed;inset:0;
+  padding-top:calc(58px + var(--st));
+  padding-bottom:calc(60px + var(--sb));
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  background:var(--bg);
+}
+.page{display:none;animation:pgIn .18s cubic-bezier(.4,0,.2,1) both}
+.page.active{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ======== HEADER — Uber style: zwart, clean, groot logo ======== */
+#hdr{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:calc(58px + var(--st));
+  padding-top:var(--st);
+  background:rgba(10,10,10,.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bor);
+  display:flex;align-items:center;
+  padding-left:16px;padding-right:12px;gap:10px;
+}
+html.lm #hdr{background:rgba(255,255,255,.97);border-color:var(--bor)}
+.hdr-logo{
+  display:flex;align-items:center;gap:8px;flex:1;
+}
+.hdr-logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--acc);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#000;letter-spacing:-.04em;
+  flex-shrink:0;
+}
+.hdr-logo-text{
+  font-size:18px;font-weight:800;color:var(--t0);
+  letter-spacing:-.04em;line-height:1;
+}
+.hdr-logo-text span{color:var(--acc);font-weight:900}
+/* Weather pill — Uber style: white on black pill */
+.wx-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 10px;border-radius:20px;
+  background:var(--bg2);border:1px solid var(--bor2);
+  cursor:pointer;transition:background .15s;
+}
+.wx-pill:active{background:var(--bg3)}
+.wx-ico{font-size:14px}.wx-temp{font-size:12px;font-weight:700;color:var(--t0)}.wx-rain{font-size:10px;color:var(--cw);font-weight:700}
+.hdr-icon-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--sur2);border:1px solid var(--bor);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--t2);transition:background .15s;
+}
+.hdr-icon-btn:active{background:var(--sur3)}
+
+/* ======== BOTTOM NAV — Facebook Tab Bar style ======== */
+#nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  height:calc(60px + var(--sb));
+  padding-bottom:var(--sb);
+  background:rgba(10,10,10,.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--bor);
+  display:flex;
+}
+html.lm #nav{background:rgba(255,255,255,.97)}
+.nb{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;padding-top:6px;
+  color:var(--t3);position:relative;min-height:44px;
+  transition:color .12s;
+}
+.nb.on{color:var(--acc)}
+.nb-i{font-size:20px;line-height:1;transition:transform .15s}
+.nb.on .nb-i{transform:translateY(-1px)}
+.nb-l{font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:color .12s}
+/* Active indicator — Uber: no underline, just color shift + micro bounce */
+.nb-badge{position:absolute;top:6px;right:calc(50% - 14px);min-width:16px;height:16px;background:var(--danger);border-radius:8px;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 4px;display:none}
+.nb-badge.show{display:flex}
+
+/* ======== FAB — Uber: black with white + ======== */
+#fab{
+  position:fixed;right:16px;bottom:calc(68px + var(--sb));z-index:200;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--acc);
+  color:#000;font-size:24px;font-weight:300;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(6,193,103,.4);
+  border:none;transition:transform .12s,box-shadow .12s;
+}
+#fab:active{transform:scale(.9);box-shadow:0 2px 12px rgba(6,193,103,.3)}
+
+/* ======== FACEBOOK-STYLE FEED CARDS ======== */
+.feed-card{
+  background:var(--bg1);
+  border-top:1px solid var(--bor);
+  border-bottom:1px solid var(--bor);
+  margin-bottom:8px;
+  overflow:hidden;
+}
+/* On light mode, cards have shadow like FB */
+html.lm .feed-card{
+  border-radius:var(--r);
+  border:1px solid var(--bor);
+  box-shadow:0 1px 3px rgba(0,0,0,.1);
+  margin:0 0 8px;
+}
+.feed-card-hdr{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px 10px;
+}
+.feed-avatar{
+  width:40px;height:40px;min-width:40px;border-radius:50%;
+  overflow:hidden;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;border:2px solid var(--bor2);
+}
+.feed-avatar img{width:100%;height:100%;object-fit:cover}
+.feed-card-info{flex:1;min-width:0}
+.feed-card-name{font-size:14px;font-weight:700;color:var(--t0);line-height:1.2}
+.feed-card-meta{font-size:12px;color:var(--t2);margin-top:1px}
+.feed-card-more{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t2)}
+/* Photo area */
+.feed-img-wrap{position:relative;width:100%;overflow:hidden}
+.feed-img{width:100%;height:200px;object-fit:cover;display:block;background:var(--bg3);transition:opacity .3s}
+.feed-img.hidden{opacity:0}
+.feed-img.show{opacity:1}
+.feed-img-em{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:72px;background:var(--bg3)}
+/* Gradient overlay on photo */
+.feed-img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 50%)}
+.feed-img-badge{
+  position:absolute;top:10px;left:10px;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(8px);
+  padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:700;color:#fff;
+}
+.feed-img-top-right{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.feed-img-btn{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.2);
+}
+/* Task chips as FB reactions */
+.feed-reactions{
+  padding:10px 14px 12px;
+  display:flex;flex-wrap:wrap;gap:6px;
+  border-top:1px solid var(--bor);
+}
+.feed-rxn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  border:1px solid var(--bor2);
+  background:var(--bg2);
+  cursor:pointer;transition:all .12s;
+  color:var(--t1);
+}
+.feed-rxn:active{transform:scale(.94)}
+.feed-rxn.water{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.feed-rxn.snoei{background:rgba(139,92,246,.15);color:#a78bfa;border-color:rgba(139,92,246,.3)}
+.feed-rxn.bemest{background:rgba(245,158,11,.15);color:#fbbf24;border-color:rgba(245,158,11,.3)}
+.feed-rxn.maai{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.3)}
+.feed-rxn.overig{background:var(--sur2);color:var(--t2)}
+.feed-rxn.rain{background:rgba(59,130,246,.06);color:var(--t3);text-decoration:line-through}
+.feed-rxn.done{opacity:.45;text-decoration:line-through}
+
+/* ======== WEATHER BANNERS — Uber notification style ======== */
+.wxb{
+  margin:8px 14px;padding:12px 14px;
+  border-radius:var(--r2);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.wxb.rain{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25)}
+.wxb.frost{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22)}
+.wxb.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22)}
+.wxb-ico{font-size:24px;line-height:1}
+.wxb-body{flex:1}
+.wxb-title{font-size:13px;font-weight:700;color:var(--t0);letter-spacing:-.01em}
+.wxb-sub{font-size:11px;color:var(--t2);margin-top:2px;line-height:1.5}
+.wxb-btn{
+  align-self:center;font-size:11px;font-weight:700;
+  padding:7px 13px;border-radius:20px;
+  background:var(--blue);color:#fff;
+  border:none;cursor:pointer;white-space:nowrap;
+}
+
+/* ======== STAT ROW — Uber: big numbers, clean ======== */
+.stat-row{
+  display:flex;gap:0;
+  padding:16px 14px 0;
+}
+.stat-item{
+  flex:1;text-align:center;
+  padding:12px 4px;
+  border-right:1px solid var(--bor);
+}
+.stat-item:last-child{border-right:none}
+.stat-num{
+  font-size:28px;font-weight:900;
+  color:var(--t0);letter-spacing:-.04em;line-height:1;
+}
+.stat-num.green{color:var(--acc)}
+.stat-lbl{
+  font-size:10px;font-weight:600;
+  color:var(--t3);margin-top:3px;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+
+/* ======== GREETING — Uber: big, bold ======== */
+.greeting{padding:20px 14px 0}
+.greeting-top{display:flex;align-items:center;justify-content:space-between}
+.greeting-txt{font-size:24px;font-weight:800;color:var(--t0);letter-spacing:-.04em;line-height:1.1}
+.greeting-date{font-size:12px;color:var(--t2);margin-top:4px;font-weight:500}
+.greeting-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--acc),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#fff;font-weight:800;
+  flex-shrink:0;
+}
+
+/* ======== PROGRESS — Uber ride progress ======== */
+.prog-wrap{margin:12px 14px 0}
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.prog-lbl{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.04em;text-transform:uppercase}
+.prog-pct{font-size:18px;font-weight:900;color:var(--acc);letter-spacing:-.04em}
+.prog-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acll));border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+
+/* ======== OVERDUE BANNER ======== */
+.od-banner{
+  margin:10px 14px 0;
+  background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);
+  border-radius:var(--r);padding:10px 14px;
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+}
+.od-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.od-txt{font-size:13px;font-weight:700;color:var(--danger);flex:1;letter-spacing:-.01em}
+.od-arr{font-size:16px;color:var(--danger)}
+
+/* ======== SECTION HEADERS — FB style ======== */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 14px 8px;
+}
+.sec-title{font-size:17px;font-weight:800;color:var(--t0);letter-spacing:-.03em}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--blue);
+  padding:5px 12px;border-radius:6px;background:rgba(24,119,242,.1);
+}
+.sec{padding:0 14px}
+
+/* ======== TASK ROW — Uber clean list ======== */
+.tr{
+  background:var(--bg1);
+  border-radius:var(--r);
+  padding:11px 12px;margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;
+  border-left:3px solid var(--bor2);
+  transition:transform .1s;
+}
+.tr:active{transform:scale(.99)}
+.tr.tw{border-left-color:var(--cw)}.tr.ts{border-left-color:var(--cs)}.tr.tf{border-left-color:var(--cf)}.tr.tm{border-left-color:var(--cm)}.tr.tk{border-left-color:var(--ck)}.tr.tb{border-left-color:var(--cb2)}.tr.tv{border-left-color:var(--cov)}.tr.to{border-left-color:var(--t4)}
+.chk{
+  width:22px;height:22px;min-width:22px;border-radius:50%;
+  border:2px solid var(--bor3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:10px;font-weight:800;color:transparent;
+  transition:all .15s;
+}
+.chk:active{transform:scale(.85)}
+.chk.done{background:var(--acc);border-color:var(--acc);color:#000}
+.tr-inf{flex:1;min-width:0}
+.tr-ttl{font-size:13px;font-weight:600;color:var(--t0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.tr-meta{font-size:11px;color:var(--t2);margin-top:1px}
+.tr-acts{display:flex;gap:3px}
+.tr-act{width:28px;height:28px;border-radius:50%;background:var(--sur2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t2);transition:background .12s}
+.tr-act:active{background:var(--sur3)}
+.bdg{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:5px;letter-spacing:.04em}
+.bw{background:rgba(59,130,246,.2);color:var(--cw)}.bs{background:rgba(139,92,246,.2);color:var(--cs)}.bf{background:rgba(245,158,11,.2);color:var(--cf)}.bm{background:rgba(16,185,129,.2);color:var(--cm)}.bk{background:rgba(163,113,74,.2);color:var(--ck)}.bb{background:rgba(239,68,68,.2);color:var(--cb2)}.bv{background:rgba(132,204,22,.2);color:var(--cov)}.bo{background:var(--sur2);color:var(--t3)}
+.late{font-size:9px;color:var(--danger);font-weight:800}
+
+/* ======== ZONE CARDS — FB card style ======== */
+.zcard{
+  background:var(--bg1);
+  border-top:1px solid var(--bor);border-bottom:1px solid var(--bor);
+  padding:14px;margin-bottom:8px;
+  cursor:pointer;position:relative;
+  transition:background .12s;
+}
+html.lm .zcard{border-radius:var(--r);border:1px solid var(--bor);margin:0 0 8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.zcard:active{background:var(--bg2)}
+.zcard-accent{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:2px 0 0 2px}
+.zc-body{padding-left:12px}
+.zc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.zc-name{font-size:16px;font-weight:800;color:var(--t0);letter-spacing:-.03em}
+.zc-cnt{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--acc);color:#000;white-space:nowrap}
+.zc-cnt.zero{background:var(--sur2);color:var(--t3)}
+.zc-meta{font-size:12px;color:var(--t2);margin-top:3px}
+.zc-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.zc-chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--sur2);color:var(--t1);font-weight:500}
+.zc-foot{display:flex;gap:6px;margin-top:10px}
+.zc-btn{
+  padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;
+  background:var(--sur2);color:var(--t1);border:1px solid var(--bor2);
+  transition:background .12s;
+}
+.zc-btn:active{background:var(--sur3)}
+.zc-btn.del{color:var(--danger);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+
+/* ======== FILTER CHIPS — Uber pill style ======== */
+.fchips{display:flex;gap:8px;overflow-x:auto;padding:0 14px 2px;margin-bottom:10px;scrollbar-width:none}
+.fchips::-webkit-scrollbar{display:none}
+.fchip{
+  padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;
+  border:1.5px solid var(--bor2);color:var(--t2);background:var(--bg2);
+  white-space:nowrap;transition:all .15s;letter-spacing:.01em;
+  flex-shrink:0;
+}
+.fchip.on{background:var(--t0);color:var(--bg);border-color:var(--t0)}
+html.lm .fchip.on{background:var(--bg);color:var(--t0)}
+.fchip:active{transform:scale(.95)}
+
+/* ======== PLANNING CALENDAR — Uber map grid precision ======== */
+.plan-hdr{
+  padding:14px 14px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.plan-mo{font-size:20px;font-weight:800;color:var(--t0);letter-spacing:-.04em}
+.plan-nav{display:flex;gap:6px}
+.plan-nb{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--bor2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--t1);
+}
+.plan-nb:active{background:var(--bg3)}
+
+/* Weather strip */
+.wx-strip{display:flex;gap:5px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.wx-strip::-webkit-scrollbar{display:none}
+.wx-dp{
+  padding:6px 10px;border-radius:20px;font-size:10px;font-weight:700;
+  border:1px solid var(--bor);background:var(--bg2);color:var(--t2);
+  white-space:nowrap;flex-shrink:0;
+}
+.wx-dp.rain{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.wx-dp.frost{background:rgba(239,68,68,.12);color:#f87171;border-color:rgba(239,68,68,.3)}
+
+/* Plant calendar card */
+.pcc{
+  margin:0 14px 10px;background:var(--bg1);
+  border-radius:var(--r2);overflow:hidden;
+  border:1px solid var(--bor);
+}
+html.lm .pcc{box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.pcc-hdr{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--bor);cursor:pointer}
+.pcc-thumb{width:40px;height:40px;min-width:40px;border-radius:50%;object-fit:cover;background:var(--bg3);border:2px solid var(--bor2)}
+.pcc-thumb-em{width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid var(--bor2)}
+.pcc-info{flex:1;min-width:0}
+.pcc-name{font-size:14px;font-weight:700;color:var(--t0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.02em}
+.pcc-zone{font-size:11px;color:var(--t2)}
+.pcc-cnt{font-size:11px;font-weight:800;padding:3px 9px;border-radius:12px;background:var(--acc);color:#000}
+.pcc-cnt.zero{background:var(--sur2);color:var(--t3)}
+.pcc-arr{font-size:12px;color:var(--t3);margin-left:4px;transition:transform .2s}
+.pcc-arr.open{transform:rotate(90deg)}
+
+/* Calendar grid */
+.pcc-cal{padding:10px 12px 11px}
+.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.dow{text-align:center;font-size:9px;color:var(--t3);font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 0}
+.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.day{min-height:40px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 1px;cursor:pointer;transition:background .1s}
+.day:active{background:var(--sur2)}
+.day.today .dn{background:var(--acc);color:#000;border-radius:50%;font-weight:900}
+.day.sel{background:var(--sur3)}
+.day.om .dn{color:var(--t4)}
+.dn{font-size:12px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:600;line-height:1}
+.ddots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;max-width:22px}
+.ddot{width:5px;height:5px;border-radius:50%}
+.ddot.done{opacity:.35}
+.day-tasks{padding:8px 12px 6px;border-top:1px solid var(--bor);background:var(--bg2)}
+.dt-row{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--bor)}
+.dt-row:last-child{border-bottom:none}
+.dt-chk{width:20px;height:20px;min-width:20px;border-radius:50%;border:2px solid var(--bor3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;font-weight:800;color:transparent;transition:all .15s}
+.dt-chk.done{background:var(--acc);border-color:var(--acc);color:#000}
+.dt-name{font-size:12px;font-weight:600;color:var(--t0);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dt-bdg{font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px}
+
+/* ======== WEATHER SHEET ======== */
+.wxd-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--bor)}
+.wxd-row:last-child{border-bottom:none}
+.wxd-name{font-size:12px;font-weight:700;color:var(--t1);width:60px}
+.wxd-ico{font-size:20px;width:26px;text-align:center}
+.wxd-temps{font-size:16px;font-weight:700;color:var(--t0);flex:1;letter-spacing:-.03em}
+.wxd-temps span{color:var(--t2);font-weight:500;font-size:13px}
+.wxd-right{text-align:right}
+.wxd-rain{font-size:11px;color:var(--cw);font-weight:700}
+.wxd-note{font-size:9px;color:var(--t3);margin-top:1px;font-weight:700;letter-spacing:.04em}
+.wxd-note.frost{color:var(--danger)}
+.wxd-note.ok{color:var(--acc)}
+
+/* ======== PLANT DETAIL ======== */
+.pd-img{width:100%;height:200px;object-fit:cover;display:block;background:var(--bg3)}
+.pd-em{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:80px;background:var(--bg3)}
+.pd-body{padding:14px 16px}
+.pd-name{font-size:22px;font-weight:800;color:var(--t0);letter-spacing:-.04em;line-height:1.1}
+.pd-lat{font-size:12px;color:var(--t2);font-style:italic;margin-top:3px}
+.pd-zone{font-size:11px;color:var(--acc);font-weight:700;margin-top:4px}
+.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
+.pd-stat{background:var(--bg2);border-radius:var(--r);padding:10px;text-align:center;border:1px solid var(--bor)}
+.pd-sv{font-size:14px;font-weight:800;color:var(--acc);letter-spacing:-.02em}
+.pd-sl{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.tip-box{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:10px 13px;margin:10px 0;font-size:12px;color:#fbbf24;line-height:1.55;font-weight:500}
+.bloom-bar{display:flex;gap:2px;margin-top:5px}
+.bmon{flex:1;height:5px;border-radius:2px;background:var(--bg3)}
+.bmon.on{background:var(--acc)}
+
+/* ======== FORMS ======== */
+.fg{margin-bottom:12px}
+.fl{font-size:10px;font-weight:800;color:var(--t2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;display:block}
+.fi{
+  width:100%;padding:11px 13px;
+  background:var(--bg2);border:1.5px solid var(--bor2);
+  border-radius:var(--r);font-size:14px;font-weight:500;
+  color:var(--t0);outline:none;transition:border-color .15s;
+}
+.fi:focus{border-color:var(--acc)}
+.fi::placeholder{color:var(--t4)}
+.sun-btns{display:flex;gap:6px}
+.sun-btn{
+  flex:1;padding:9px 5px;border-radius:var(--r);
+  border:1.5px solid var(--bor2);background:var(--bg2);
+  color:var(--t2);text-align:center;font-size:11px;font-weight:700;
+  transition:all .15s;
+}
+.sun-btn.on{background:rgba(6,193,103,.15);color:var(--acc);border-color:var(--acc)}
+.seg{display:flex;gap:5px;flex-wrap:wrap}
+.seg-b{
+  padding:8px 13px;border-radius:20px;font-size:12px;font-weight:700;
+  border:1.5px solid var(--bor2);color:var(--t2);background:var(--bg2);
+  transition:all .15s;flex:1;text-align:center;
+}
+.seg-b.on{background:var(--t0);color:var(--bg);border-color:var(--t0)}
+html.lm .seg-b.on{background:var(--bg);color:var(--t0)}
+.cc-row{display:flex;gap:7px;flex-wrap:wrap}
+.cc{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:border-color .15s,transform .15s}
+.cc.on{border-color:var(--t0);transform:scale(1.14)}
+.mog{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.mob{padding:6px 2px;border-radius:6px;font-size:10px;font-weight:700;border:1.5px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;transition:all .15s}
+.mob.on{background:var(--acc);color:#000;border-color:var(--acc)}
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tb{padding:10px 4px;border-radius:var(--r);font-size:11px;font-weight:700;border:1.5px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;transition:all .15s;line-height:1.5}
+.tb.on{border-color:var(--acc);color:var(--acc);background:rgba(6,193,103,.1)}
+.btn-p{
+  width:100%;padding:13px;
+  background:var(--acc);color:#000;
+  border-radius:var(--r);font-size:15px;font-weight:800;
+  border:none;font-family:'Inter',sans-serif;
+  transition:opacity .15s;letter-spacing:-.02em;
+}
+.btn-p:active{opacity:.82}
+.btn-s{width:100%;padding:12px;background:var(--sur2);color:var(--t1);border-radius:var(--r);font-size:14px;font-weight:700;border:1.5px solid var(--bor2);margin-top:8px}
+.btn-d{width:100%;padding:11px;background:rgba(239,68,68,.1);color:var(--danger);border-radius:var(--r);font-size:13px;font-weight:700;border:1.5px solid rgba(239,68,68,.25);margin-top:8px}
+.btn-blue{width:100%;padding:12px;background:var(--blue);color:#fff;border-radius:var(--r);font-size:14px;font-weight:800;border:none;font-family:'Inter',sans-serif;margin-top:8px}
+
+/* ======== PLANT SEARCH ======== */
+.plist{max-height:240px;overflow-y:auto;border:1.5px solid var(--bor2);border-radius:var(--r);margin-top:7px}
+.pi{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--bor);cursor:pointer;transition:background .1s}
+.pi:last-child{border-bottom:none}
+.pi:active{background:var(--sur2)}
+.pi-em{width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid var(--bor2)}
+.pi-name{font-size:13px;font-weight:700;color:var(--t0);letter-spacing:-.01em}
+.pi-lat{font-size:10px;color:var(--t2);font-style:italic}
+.pi-wd{font-size:10px;color:var(--acc);font-weight:800}
+
+/* ======== SHEETS — Facebook bottom sheet ======== */
+.sbd{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.sbd.open{opacity:1;pointer-events:all}
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:310;
+  background:var(--bg1);
+  border-radius:20px 20px 0 0;
+  border-top:1px solid var(--bor2);
+  max-height:93dvh;overflow-y:auto;
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.2,.8,.3,1);
+  padding-bottom:calc(16px + var(--sb));
+}
+.sheet.open{transform:none}
+.sh{width:36px;height:4px;background:var(--bor3);border-radius:2px;margin:12px auto 0}
+.s-hdr{padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bor)}
+.s-title{font-size:18px;font-weight:800;color:var(--t0);letter-spacing:-.04em}
+.s-close{width:30px;height:30px;border-radius:50%;background:var(--sur2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2)}
+.s-body{padding:14px 16px}
+
+/* ======== MEER PAGE ======== */
+.meer-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 14px 0}
+.ms-card{background:var(--bg1);border:1px solid var(--bor);border-radius:var(--r2);padding:14px;text-align:center}
+.ms-n{font-size:32px;font-weight:900;color:var(--t0);letter-spacing:-.06em;line-height:1}
+.ms-l{font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.ac{
+  background:var(--bg1);border:1px solid var(--bor);
+  border-radius:var(--r2);padding:14px;margin:8px 14px 0;
+}
+.ac-t{font-size:11px;font-weight:800;color:var(--t2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.ab{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 12px;border-radius:var(--r);
+  background:var(--sur2);margin-bottom:6px;
+  width:100%;text-align:left;font-size:13px;
+  color:var(--t1);font-weight:600;
+  transition:background .12s;letter-spacing:-.01em;
+}
+.ab:active{background:var(--sur3)}
+.ab.red{color:var(--danger)}
+.dz{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:var(--r2);padding:14px;margin:8px 14px 0}
+.dz-t{font-size:11px;font-weight:800;color:var(--danger);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.pfooter{text-align:center;padding:20px;font-size:11px;color:var(--t3);font-weight:500}
+
+/* ======== ZONE DETAIL SHEET ======== */
+.zdpc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+.zdp{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 10px;border-radius:20px;
+  background:var(--bg2);border:1px solid var(--bor);
+  font-size:12px;color:var(--t1);cursor:pointer;font-weight:600;
+}
+.zdp:active{background:var(--bg3)}
+
+/* ======== MISC ======== */
+.dvdr{height:1px;background:var(--bor);margin:12px 0}
+.empty{text-align:center;padding:48px 20px;color:var(--t3)}
+.empty-i{font-size:48px;margin-bottom:10px;opacity:.3}
+.empty-t{font-size:14px;font-weight:500;line-height:1.6}
+#toast{
+  position:fixed;bottom:calc(70px + var(--sb) + 8px);
+  left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--t0);border-radius:20px;
+  padding:9px 18px;font-size:12px;font-weight:800;
+  color:var(--bg);white-space:nowrap;z-index:500;
+  opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;
+  letter-spacing:-.01em;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+html.lm #toast{background:var(--bg);color:var(--t0)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-logo-mark">M</div>
+    <div class="hdr-logo-text">Mijn<span>Tuin</span></div>
+  </div>
+  <div class="wx-pill" id="wxPill" onclick="openSheet('sWx')" style="display:none">
+    <span class="wx-ico" id="wxIco">&#9729;</span>
+    <span class="wx-temp" id="wxTemp">--&deg;</span>
+    <span class="wx-rain" id="wxRain"></span>
+  </div>
+  <button class="hdr-icon-btn" onclick="toggleTheme()">&#9680;</button>
+</div>
+
+<!-- WRAP -->
+<div id="wrap">
+
+  <!-- VANDAAG -->
+  <div class="page active" id="pToday">
+    <div class="greeting">
+      <div class="greeting-top">
+        <div>
+          <div class="greeting-txt" id="greetTxt">Goedemorgen</div>
+          <div class="greeting-date" id="greetDate"></div>
+        </div>
+        <div class="greeting-avatar" id="greetAvatar">&#127807;</div>
+      </div>
+    </div>
+    <div id="wxBanners"></div>
+    <div class="stat-row" id="statGrid"></div>
+    <div class="prog-wrap">
+      <div class="prog-top"><div class="prog-lbl">Voortgang</div><div class="prog-pct" id="progPct">0%</div></div>
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+    <div id="odBanner"></div>
+    <div class="sec-hdr"><div class="sec-title">Vandaag</div></div>
+    <div class="sec" id="todayList"></div>
+    <div class="sec-hdr"><div class="sec-title">Aankomend</div></div>
+    <div class="sec" id="upcomingList"></div>
+    <div class="sec-hdr"><div class="sec-title">Zones</div><div class="sec-link" onclick="goTab('pZones')">Alle bekijken</div></div>
+    <div id="homeZones"></div>
+    <div style="height:10px"></div>
+  </div>
+
+  <!-- ZONES -->
+  <div class="page" id="pZones">
+    <div style="height:12px"></div>
+    <div id="zoneList"></div>
+    <div id="zoneEmpty" class="empty" style="display:none">
+      <div class="empty-i">&#11041;</div>
+      <div class="empty-t">Nog geen zones.<br>Maak er een aan via <strong>+</strong></div>
+    </div>
+  </div>
+
+  <!-- PLANTEN (foto feed) -->
+  <div class="page" id="pPlanten">
+    <div style="height:10px"></div>
+    <div class="fchips" id="plantFilter"></div>
+    <div id="plantGrid"></div>
+    <div id="plantEmpty" class="empty" style="display:none">
+      <div class="empty-i">&#10047;</div>
+      <div class="empty-t">Nog geen planten.<br>Voeg toe via <strong>+</strong></div>
+    </div>
+  </div>
+
+  <!-- PLANNING -->
+  <div class="page" id="pPlanning">
+    <div class="plan-hdr">
+      <div class="plan-mo" id="planMo"></div>
+      <div class="plan-nav">
+        <button class="plan-nb" onclick="planNav(-1)">&#8249;</button>
+        <button class="plan-nb" onclick="planNav(1)">&#8250;</button>
+      </div>
+    </div>
+    <div class="wx-strip" id="wxStrip"></div>
+    <div id="planList"></div>
+    <div id="planEmpty" class="empty" style="display:none">
+      <div class="empty-i">&#9638;</div>
+      <div class="empty-t">Geen taken deze maand.<br>Sync via <strong>Meer</strong></div>
+    </div>
+  </div>
+
+  <!-- MEER -->
+  <div class="page" id="pMeer">
+    <div class="meer-stats" id="meerStats"></div>
+    <div class="ac"><div class="ac-t">&#9672; Sync</div>
+      <button class="ab" onclick="syncMonth()">&#9672; Genereer taken &#8212; deze maand</button>
+      <button class="ab" onclick="syncYear()">&#9638; Genereer taken &#8212; heel jaar</button>
+      <button class="ab" onclick="fetchWx(true)">&#9680; Weer opnieuw laden</button>
+    </div>
+    <div class="ac"><div class="ac-t">&#9638; Data</div>
+      <button class="ab" onclick="exportICS()">&#9636; Exporteer agenda (.ics)</button>
+      <button class="ab" onclick="expJSON()">&#11041; Exporteer backup (.json)</button>
+      <button class="ab" onclick="impJSON()">&#9680; Importeer backup</button>
+    </div>
+    <div class="ac"><div class="ac-t">&#10047; Beheer</div>
+      <button class="ab" onclick="clearDone()">&#9642; Wis voltooide taken</button>
+    </div>
+    <div class="dz"><div class="dz-t">&#9888; Gevarenzone</div>
+      <button class="ab red" onclick="clearAll()">&#9672; Wis alles</button>
+    </div>
+    <div class="pfooter">MijnTuin v3 &middot; <span id="ftPlants">0</span> planten &middot; <span id="ftLoc">locatie &#8212;</span></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- NAVBAR -->
+<nav id="nav">
+  <button class="nb on" data-p="pToday" onclick="goTab('pToday')">
+    <div class="nb-i">&#9672;</div><div class="nb-l">Vandaag</div>
+  </button>
+  <button class="nb" data-p="pZones" onclick="goTab('pZones')">
+    <div class="nb-i">&#11041;</div><div class="nb-l">Zones</div>
+  </button>
+  <button class="nb" data-p="pPlanten" onclick="goTab('pPlanten')">
+    <div class="nb-i">&#10047;</div><div class="nb-l">Planten</div>
+  </button>
+  <button class="nb" data-p="pPlanning" onclick="goTab('pPlanning')">
+    <div class="nb-i">&#9638;</div><div class="nb-l">Planning</div>
+  </button>
+  <button class="nb" data-p="pMeer" onclick="goTab('pMeer')">
+    <div class="nb-i">&#9642;</div><div class="nb-l">Meer</div>
+  </button>
+</nav>
+
+<button id="fab" onclick="fabClick()">+</button>
+<div id="toast"></div>
+<div class="sbd" id="bd" onclick="closeAll()"></div>
+
+<!-- SHEETS -->
+<div class="sheet" id="sZone">
+  <div class="sh"></div>
+  <div class="s-hdr"><div class="s-title" id="sTZ">Nieuwe zone</div><button class="s-close" onclick="closeSheet('sZone')">&#10005;</button></div>
+  <div class="s-body">
+    <div class="fg"><label class="fl">Naam</label><input class="fi" id="zName" placeholder="bijv. Achtertuin&#8230;"></div>
+    <div class="fg"><label class="fl">Omschrijving</label><input class="fi" id="zDesc" placeholder="Optioneel"></div>
+    <div class="fg"><label class="fl">Zonlicht</label>
+      <div class="sun-btns">
+        <button class="sun-btn on" data-s="zon" onclick="setSun('zon')">&#9728; Zon</button>
+        <button class="sun-btn" data-s="halfschaduw" onclick="setSun('halfschaduw')">&#9680; Half</button>
+        <button class="sun-btn" data-s="schaduw" onclick="setSun('schaduw')">&#9679; Schaduw</button>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Kleur</label><div class="cc-row" id="ccPicker"></div></div>
+    <button class="btn-p" onclick="saveZone()">Zone opslaan</button>
+  </div>
+</div>
+
+<div class="sheet" id="sPlant">
+  <div class="sh"></div>
+  <div class="s-hdr"><div class="s-title">Plant toevoegen</div><button class="s-close" onclick="closeSheet('sPlant')">&#10005;</button></div>
+  <div class="s-body">
+    <div class="fg"><label class="fl">Zone</label><select class="fi" id="pZoneSel"></select></div>
+    <div class="fg"><label class="fl">Zoeken</label><input class="fi" id="pSearch" placeholder="Naam of Latijn&#8230;" oninput="filterPDB()"></div>
+    <div class="fchips" style="padding:0;margin-bottom:7px" id="catChips">
+      <div class="fchip on" data-c="all" onclick="setCat('all')">Alle</div>
+      <div class="fchip" data-c="bloem" onclick="setCat('bloem')">Bloem</div>
+      <div class="fchip" data-c="plant" onclick="setCat('plant')">Plant</div>
+      <div class="fchip" data-c="boom" onclick="setCat('boom')">Boom</div>
+      <div class="fchip" data-c="gras" onclick="setCat('gras')">Gras</div>
+    </div>
+    <div class="plist" id="pList"></div>
+    <div class="dvdr"></div>
+    <div class="fl">Handmatig toevoegen</div>
+    <div class="fg"><input class="fi" id="pCustom" placeholder="Naam van de plant"></div>
+    <button class="btn-s" onclick="addCustom()">+ Toevoegen</button>
+  </div>
+</div>
+
+<div class="sheet" id="sPD">
+  <div class="sh"></div>
+  <div class="s-hdr"><div class="s-title">Plantdetail</div><button class="s-close" onclick="closeSheet('sPD')">&#10005;</button></div>
+  <div id="pdBody"></div>
+</div>
+
+<div class="sheet" id="sTask">
+  <div class="sh"></div>
+  <div class="s-hdr"><div class="s-title">Taak aanmaken</div><button class="s-close" onclick="closeSheet('sTask')">&#10005;</button></div>
+  <div class="s-body">
+    <div class="fg"><label class="fl">Naam</label><input class="fi" id="tName" placeholder="Omschrijving&#8230;"></div>
+    <div class="fg"><label class="fl">Type</label>
+      <div class="tg" id="typeGrid">
+        <button class="tb on" data-t="water" onclick="setTT('water')">&#128167;<br>Water</button>
+        <button class="tb" data-t="snoei" onclick="setTT('snoei')">&#9986;<br>Snoei</button>
+        <button class="tb" data-t="bemest" onclick="setTT('bemest')">&#11041;<br>Bemest</button>
+        <button class="tb" data-t="maai" onclick="setTT('maai')">&#9636;<br>Maai</button>
+        <button class="tb" data-t="verticuteer" onclick="setTT('verticuteer')">&#9638;<br>Vert.</button>
+        <button class="tb" data-t="kalk" onclick="setTT('kalk')">&#9672;<br>Kalk</button>
+        <button class="tb" data-t="behandel" onclick="setTT('behandel')">&#8853;<br>Behandel</button>
+        <button class="tb" data-t="overig" onclick="setTT('overig')">&#9642;<br>Overig</button>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Datum</label><input class="fi" type="date" id="tDue"></div>
+    <div class="fg"><label class="fl">Prioriteit</label>
+      <div class="seg">
+        <button class="seg-b" data-p="high" onclick="setTP('high')">Hoog</button>
+        <button class="seg-b on" data-p="normal" onclick="setTP('normal')">Normaal</button>
+        <button class="seg-b" data-p="low" onclick="setTP('low')">Laag</button>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Zone (opt.)</label><select class="fi" id="tZone"><option value="">&#8212; Geen &#8212;</option></select></div>
+    <button class="btn-p" onclick="saveTask()">Taak opslaan</button>
+  </div>
+</div>
+
+<div class="sheet" id="sZD">
+  <div class="sh"></div>
+  <div class="s-hdr"><div class="s-title" id="zdTitle">Zone</div><button class="s-close" onclick="closeSheet('sZD')">&#10005;</button></div>
+  <div class="s-body" id="zdBody"></div>
+</div>
+
+<div class="sheet" id="sWx">
+  <div class="sh"></div>
+  <div class="s-hdr"><div class="s-title">Weersoverzicht 7 dagen</div><button class="s-close" onclick="closeSheet('sWx')">&#10005;</button></div>
+  <div class="s-body" id="wxBody"><div style="color:var(--t3)">Laden&#8230;</div></div>
+</div>
+
+<script>
+/* ============================================================
+   PLANT DATABASE (135 soorten)
+   ============================================================ */
+const PDB=[
+  {id:'p001',n:'Olijfboom',lat:'Olea europaea',cat:'boom',sun:'zon',w:10,pr:[4],fe:[3,5],bl:[6,7],em:'\u{1FAD2}',img:'olive tree garden mediterranean',tip:'Winterbescherming bij temperaturen onder -8\u00B0C.'},
+  {id:'p002',n:'Olijfwilg',lat:'Elaeagnus angustifolia',cat:'boom',sun:'zon',w:7,pr:[5,6],fe:[3],em:'\u{1F33F}',img:'elaeagnus silver leaf tree',tip:'Bijzonder droogtebestendig eenmaal gevestigd.'},
+  {id:'p003',n:'Citroenboom',lat:'Citrus limon',cat:'boom',sun:'zon',w:4,pr:[3,4],fe:[3,4,5,6,7,8,9],em:'\u{1F34B}',img:'lemon tree pot garden',tip:'In pot. Naar binnen bij vorst. Veel licht nodig.'},
+  {id:'p004',n:'Sinaasappelboom',lat:'Citrus sinensis',cat:'boom',sun:'zon',w:4,pr:[3,4],fe:[3,4,5,6,7,8,9],em:'\u{1F34A}',img:'orange tree fruit garden',tip:'Naar binnen bij vorst. Houdt van volle zon.'},
+  {id:'p005',n:'Kumquat',lat:'Fortunella margarita',cat:'boom',sun:'zon',w:5,pr:[3,4],fe:[3,5,7],em:'\u{1F7E0}',img:'kumquat citrus small tree',tip:'Meest winterharde citrussoort.'},
+  {id:'p006',n:'Vijgenboom',lat:'Ficus carica',cat:'boom',sun:'zon',w:7,pr:[2,3],fe:[4,5],bl:[7,9],em:'\u{1F7E3}',img:'fig tree ripe figs garden',tip:'Mulchen bij strenge vorst.'},
+  {id:'p007',n:'Appelboom',lat:'Malus domestica',cat:'boom',sun:'zon',w:10,pr:[2,3],fe:[3,4],bl:[8,10],em:'\u{1F34E}',img:'apple tree orchard blossom',tip:'Snoei in late winter voor het uitlopen.'},
+  {id:'p008',n:'Perenboom',lat:'Pyrus communis',cat:'boom',sun:'zon',w:10,pr:[2,3],fe:[3,4],bl:[8,9],em:'\u{1F350}',img:'pear tree garden fruit',tip:'Plant twee rassen voor optimale bestuiving.'},
+  {id:'p009',n:'Pruimenboom',lat:'Prunus domestica',cat:'boom',sun:'zon',w:10,pr:[6,7],fe:[3,4],bl:[7,9],em:'\u{1F7E4}',img:'plum tree blossom spring',tip:'Snoei na de oogst.'},
+  {id:'p010',n:'Kersenboom',lat:'Prunus avium',cat:'boom',sun:'zon',w:10,pr:[6,7],fe:[3,4],bl:[6,7],em:'\u{1F352}',img:'cherry tree white blossom',tip:'Net beschermen tegen vogels.'},
+  {id:'p011',n:'Magnolia',lat:'Magnolia soulangeana',cat:'boom',sun:'zon',w:7,pr:[],fe:[3,4],bl:[3,5],em:'\u{1F338}',img:'magnolia tree pink flowers bloom',tip:'Niet snoeien. Plant op beschutte plek.'},
+  {id:'p012',n:'Sierkers',lat:'Prunus serrulata',cat:'boom',sun:'zon',w:7,pr:[6],fe:[3,4],bl:[3,5],em:'\u{1F338}',img:'japanese cherry blossom sakura pink',tip:'Spectaculaire voorjaarsbloesem.'},
+  {id:'p013',n:'Japanse esdoorn',lat:'Acer palmatum',cat:'boom',sun:'halfschaduw',w:5,pr:[],fe:[4,5],bl:[9,11],em:'\u{1F341}',img:'japanese maple acer red autumn leaves',tip:'Bescherm tegen de middagzon.'},
+  {id:'p014',n:'Taxus',lat:'Taxus baccata',cat:'boom',sun:'halfschaduw',w:7,pr:[7,8],fe:[],em:'\u{1F332}',img:'yew hedge topiary garden',tip:'Alle delen zijn giftig!'},
+  {id:'p015',n:'Hulst',lat:'Ilex aquifolium',cat:'boom',sun:'halfschaduw',w:7,pr:[3,4],fe:[],bl:[10,12],em:'\u{1F33F}',img:'holly ilex red berries winter',tip:'Man en vrouw planten voor bessen.'},
+  {id:'p016',n:'Roos',lat:'Rosa',cat:'plant',sun:'zon',w:4,pr:[3,11],fe:[4,6,8],bl:[5,10],em:'\u{1F339}',img:'rose bush garden pink blooming',tip:'Water aan de voet. Snoei bevordert bloei.'},
+  {id:'p017',n:'Lavendel',lat:'Lavandula angustifolia',cat:'plant',sun:'zon',w:10,pr:[8,3],fe:[],bl:[6,8],em:'\u{1F49C}',img:'lavender field purple fragrant',tip:'Droogtebestendig. Na bloei terugsnoeien.'},
+  {id:'p018',n:'Hortensia',lat:'Hydrangea macrophylla',cat:'plant',sun:'halfschaduw',w:3,pr:[3],fe:[4,5],bl:[6,9],em:'\u{1F499}',img:'hydrangea blue garden flowers',tip:'Bloemkleur afhankelijk van pH grond.'},
+  {id:'p019',n:'Buxus',lat:'Buxus sempervirens',cat:'plant',sun:'halfschaduw',w:7,pr:[5,8],fe:[4,5],em:'\u{1F33F}',img:'buxus box hedge topiary formal',tip:'Vatbaar voor buxusmot. Regelmatig inspecteren.'},
+  {id:'p020',n:'Forsythia',lat:'Forsythia intermedia',cat:'plant',sun:'zon',w:7,pr:[4,5],fe:[3,4],bl:[3,4],em:'\u{1F49B}',img:'forsythia yellow spring flowers shrub',tip:'Snoei direct na de bloei.'},
+  {id:'p021',n:'Vlinderbos',lat:'Buddleja davidii',cat:'plant',sun:'zon',w:7,pr:[3,4],fe:[3,5],bl:[7,9],em:'\u{1F98B}',img:'buddleja butterfly bush purple flowers',tip:'Fors terugsnoeien in voorjaar.'},
+  {id:'p022',n:'Heide',lat:'Calluna vulgaris',cat:'plant',sun:'zon',w:7,pr:[3,4],fe:[],bl:[8,11],em:'\u{1F33A}',img:'heather calluna purple moorland',tip:'Zure grond vereist.'},
+  {id:'p023',n:'Rhododendron',lat:'Rhododendron',cat:'plant',sun:'halfschaduw',w:5,pr:[5,6],fe:[4,5],bl:[4,6],em:'\u{1F338}',img:'rhododendron pink red flowers blooming',tip:'Zure goed doorlatende grond.'},
+  {id:'p024',n:'Sering',lat:'Syringa vulgaris',cat:'plant',sun:'zon',w:7,pr:[5,6],fe:[3,4],bl:[4,6],em:'\u{1F49C}',img:'lilac syringa purple fragrant flowers',tip:'Verwelkte bloemen direct afsnijden.'},
+  {id:'p025',n:'Weigela',lat:'Weigela florida',cat:'plant',sun:'zon',w:7,pr:[6,7],fe:[3,4],bl:[5,7],em:'\u{1F338}',img:'weigela pink flowering shrub',tip:'Een derde oudste takken na bloei verwijderen.'},
+  {id:'p026',n:'Spierstruik',lat:'Spiraea japonica',cat:'plant',sun:'zon',w:7,pr:[3,4],fe:[3,4],bl:[6,8],em:'\u{1F338}',img:'spiraea japonica pink flowers garden',tip:'Fors terugsnoeien in vroeg voorjaar.'},
+  {id:'p027',n:'Mahonia',lat:'Mahonia aquifolium',cat:'plant',sun:'schaduw',w:7,pr:[4,5],fe:[],bl:[3,5],em:'\u{1F33F}',img:'mahonia yellow flowers winter garden',tip:'Ideaal voor schaduwrijke plekken.'},
+  {id:'p028',n:'Berberis',lat:'Berberis thunbergii',cat:'plant',sun:'zon',w:10,pr:[6,7],fe:[],bl:[4,5],em:'\u{1F33F}',img:'berberis hedge red purple leaves',tip:'Stevig doorndragende haag.'},
+  {id:'p029',n:'Clematis',lat:'Clematis',cat:'plant',sun:'zon',w:3,pr:[2,3],fe:[4,5,6],bl:[5,9],em:'\u{1F33A}',img:'clematis purple climbing flowers wall',tip:'Wortels in schaduw, bloemen in zon.'},
+  {id:'p030',n:'Blauweregen',lat:'Wisteria sinensis',cat:'plant',sun:'zon',w:7,pr:[7,8,2,3],fe:[3,4],bl:[4,6],em:'\u{1F49C}',img:'wisteria purple pergola hanging flowers',tip:'Zomer en winter snoeien.'},
+  {id:'p031',n:'Kamperfoelie',lat:'Lonicera periclymenum',cat:'plant',sun:'halfschaduw',w:5,pr:[8,9],fe:[3,4],bl:[6,9],em:'\u{1F338}',img:'honeysuckle lonicera climbing fragrant',tip:'Geurig; trekt nachtvlinders aan.'},
+  {id:'p032',n:'Klimroos',lat:'Rosa climbing',cat:'plant',sun:'zon',w:4,pr:[3,11],fe:[4,6],bl:[5,10],em:'\u{1F339}',img:'climbing rose wall arch pink white',tip:'Horizontaal vastbinden geeft meer bloemen.'},
+  {id:'p033',n:'Wilde wingerd',lat:'Parthenocissus tricuspidata',cat:'plant',sun:'halfschaduw',w:7,pr:[3,4],fe:[],bl:[9,11],em:'\u{1F342}',img:'virginia creeper autumn red wall',tip:'Spectaculaire herfstkleuring.'},
+  {id:'p034',n:'Luciferplant',lat:'Crocosmia Lucifer',cat:'bloem',sun:'zon',w:5,pr:[11,3],fe:[4,5],bl:[7,8],em:'\u{1F534}',img:'crocosmia lucifer red orange flowers',tip:'Vuurrode bloemen juli-augustus. Volledig winterhard.'},
+  {id:'p035',n:'Sedum',lat:'Sedum spectabile',cat:'bloem',sun:'zon',w:14,pr:[],fe:[4],bl:[8,10],em:'\u{1F338}',img:'sedum stonecrop pink autumn flowers',tip:'Droogtebestendig. Uitstekend voor vlinders.'},
+  {id:'p036',n:'Salvia',lat:'Salvia nemorosa',cat:'bloem',sun:'zon',w:7,pr:[6,7],fe:[4,5],bl:[5,8],em:'\u{1F49C}',img:'salvia nemorosa purple spikes garden',tip:'Terugsnoeien na eerste bloei.'},
+  {id:'p037',n:'Achillea',lat:'Achillea millefolium',cat:'bloem',sun:'zon',w:10,pr:[10,3],fe:[4],bl:[6,9],em:'\u{1F33C}',img:'achillea yarrow yellow white flowers',tip:'Droogteresistent.'},
+  {id:'p038',n:'Echinacea',lat:'Echinacea purpurea',cat:'bloem',sun:'zon',w:7,pr:[3,4],fe:[4,5],bl:[7,9],em:'\u{1F338}',img:'echinacea purple coneflower garden',tip:'Zaadknoppen laten staan voor vogels.'},
+  {id:'p039',n:'Astilbe',lat:'Astilbe',cat:'bloem',sun:'halfschaduw',w:3,pr:[3],fe:[4,5],bl:[6,8],em:'\u{1F338}',img:'astilbe shade garden pink plumes',tip:'Houdt van vochtige grond.'},
+  {id:'p040',n:'Helenium',lat:'Helenium autumnale',cat:'bloem',sun:'zon',w:5,pr:[3,4],fe:[4,5],bl:[8,10],em:'\u{1F33B}',img:'helenium sneezeweed orange brown daisy',tip:'Pinch in mei voor compacte groei.'},
+  {id:'p041',n:'Rudbeckia',lat:'Rudbeckia fulgida',cat:'bloem',sun:'zon',w:7,pr:[3,4],fe:[4,5],bl:[7,10],em:'\u{1F33C}',img:'rudbeckia black eyed susan yellow',tip:'Lang bloeiend; zaadknoppen laten.'},
+  {id:'p042',n:'Geranium',lat:'Geranium pratense',cat:'bloem',sun:'halfschaduw',w:7,pr:[6,7],fe:[4,5],bl:[5,8],em:'\u{1F49C}',img:'hardy geranium purple cranesbill flowers',tip:'Tweede flush na terugsnoeien.'},
+  {id:'p043',n:'Hosta',lat:'Hosta',cat:'plant',sun:'schaduw',w:4,pr:[],fe:[4,5],bl:[7,8],em:'\u{1F33F}',img:'hosta shade garden large leaves',tip:'Bescherm tegen slakken.'},
+  {id:'p044',n:'Varen',lat:'Polystichum setiferum',cat:'plant',sun:'schaduw',w:5,pr:[3,4],fe:[4],em:'\u{1F33F}',img:'fern garden shade polystichum',tip:'Wintergroen. Oud blad verwijderen.'},
+  {id:'p045',n:'Daylily',lat:'Hemerocallis',cat:'bloem',sun:'zon',w:5,pr:[3],fe:[4,5],bl:[6,8],em:'\u{1F9E1}',img:'daylily hemerocallis orange garden',tip:'Elke bloem leeft maar een dag.'},
+  {id:'p046',n:'Veronica',lat:'Veronica spicata',cat:'bloem',sun:'zon',w:7,pr:[10,3],fe:[4],bl:[6,8],em:'\u{1F499}',img:'veronica spicata blue spikes flowers',tip:'Lange bloeiaren; trekt bijen.'},
+  {id:'p047',n:'Kniphofia',lat:'Kniphofia uvaria',cat:'bloem',sun:'zon',w:7,pr:[3,4],fe:[4,5],bl:[6,9],em:'\u{1F525}',img:'kniphofia red hot poker torch lily',tip:'Vuurpijl. Mulchen bij strenge vorst.'},
+  {id:'p048',n:'Agapanthus',lat:'Agapanthus africanus',cat:'bloem',sun:'zon',w:5,pr:[],fe:[4,5,6],bl:[7,8],em:'\u{1F499}',img:'agapanthus blue flowers garden summer',tip:'In pot overwinteren op vorstvrije plek.'},
+  {id:'p049',n:'Phlox',lat:'Phlox paniculata',cat:'bloem',sun:'zon',w:4,pr:[3,4],fe:[4,5],bl:[7,9],em:'\u{1F338}',img:'phlox paniculata pink summer flowers',tip:'Goede luchtcirculatie ter voorkoming van meeldauw.'},
+  {id:'p050',n:'Campanula',lat:'Campanula persicifolia',cat:'bloem',sun:'zon',w:7,pr:[6,7],fe:[4,5],bl:[6,8],em:'\u{1F514}',img:'campanula bellflower blue purple garden',tip:'Terugknippen na eerste bloei.'},
+  {id:'p051',n:'Tulp',lat:'Tulipa',cat:'bloem',sun:'zon',w:14,pr:[],fe:[],bl:[4,5],em:'\u{1F337}',img:'tulips colorful spring garden blooming',tip:'Plant bollen oktober-november.'},
+  {id:'p052',n:'Narcis',lat:'Narcissus',cat:'bloem',sun:'zon',w:14,pr:[],fe:[],bl:[3,5],em:'\u{1F33C}',img:'daffodil narcissus yellow spring flowers',tip:'Blad 6 weken laten staan na bloei.'},
+  {id:'p053',n:'Hyacint',lat:'Hyacinthus orientalis',cat:'bloem',sun:'zon',w:10,pr:[],fe:[],bl:[3,4],em:'\u{1F49C}',img:'hyacinth purple spring fragrant bulb',tip:'Geurig. Plant 15 cm diep.'},
+  {id:'p054',n:'Krokus',lat:'Crocus',cat:'bloem',sun:'zon',w:14,pr:[],fe:[],bl:[2,4],em:'\u{1F49C}',img:'crocus purple early spring flowers',tip:'Vroege bestuiver. Plant in groepen van 10+.'},
+  {id:'p055',n:'Dahlia',lat:'Dahlia',cat:'bloem',sun:'zon',w:3,pr:[],fe:[5,6,7],bl:[7,10],em:'\u{1F338}',img:'dahlia colorful garden flowers large',tip:'Knollen graven bij eerste vorst.'},
+  {id:'p056',n:'Gladiool',lat:'Gladiolus',cat:'bloem',sun:'zon',w:4,pr:[],fe:[5,6],bl:[7,9],em:'\u{1F33A}',img:'gladiolus flowers tall garden colorful',tip:'Knollen planten na de vorst.'},
+  {id:'p057',n:'Allium',lat:'Allium giganteum',cat:'bloem',sun:'zon',w:10,pr:[],fe:[],bl:[5,6],em:'\u{26AB}',img:'allium purple globe flower garden',tip:'Grote bolvormige bloemen.'},
+  {id:'p058',n:'Sneeuwklokje',lat:'Galanthus nivalis',cat:'bloem',sun:'halfschaduw',w:14,pr:[],fe:[],bl:[1,3],em:'\u{1F90D}',img:'snowdrop galanthus white winter flower',tip:'Vroegste lentebloem.'},
+  {id:'p059',n:'Muscari',lat:'Muscari armeniacum',cat:'bloem',sun:'zon',w:14,pr:[],fe:[],bl:[3,5],em:'\u{1F499}',img:'muscari grape hyacinth blue spring',tip:'Plant in grote groepen.'},
+  {id:'p060',n:'Fritillaria',lat:'Fritillaria meleagris',cat:'bloem',sun:'halfschaduw',w:10,pr:[],fe:[],bl:[4,5],em:'\u{1F7E3}',img:'fritillaria meleagris checkered flower',tip:'Vochtige goed doorlatende grond.'},
+  {id:'p061',n:'Rozemarijn',lat:'Rosmarinus officinalis',cat:'plant',sun:'zon',w:10,pr:[4,5],fe:[],bl:[4,6],em:'\u{1F33F}',img:'rosemary herb garden flowers blue',tip:'Droogtebestendig.'},
+  {id:'p062',n:'Tijm',lat:'Thymus vulgaris',cat:'plant',sun:'zon',w:10,pr:[4,5],fe:[],bl:[5,7],em:'\u{1F33F}',img:'thyme herb ground cover purple flowers',tip:'Uitstekend als bodembedekker.'},
+  {id:'p063',n:'Basilicum',lat:'Ocimum basilicum',cat:'plant',sun:'zon',w:2,pr:[],fe:[5,6,7],bl:[6,9],em:'\u{1F33F}',img:'basil herb fresh green kitchen',tip:'Jaarlijkse plant. Warm houden.'},
+  {id:'p064',n:'Munt',lat:'Mentha',cat:'plant',sun:'halfschaduw',w:4,pr:[7,8],fe:[4,5],bl:[7,9],em:'\u{1F33F}',img:'mint herb green leaves garden',tip:'In pot houden - invasief in border.'},
+  {id:'p065',n:'Salie',lat:'Salvia officinalis',cat:'plant',sun:'zon',w:7,pr:[4,5],fe:[4],bl:[5,7],em:'\u{1F33F}',img:'sage salvia officinalis grey green herb',tip:'Licht terugsnoeien in voorjaar.'},
+  {id:'p066',n:'Oregano',lat:'Origanum vulgare',cat:'plant',sun:'zon',w:10,pr:[8,9],fe:[],bl:[7,9],em:'\u{1F33F}',img:'oregano herb garden flowers',tip:'Droogtebestendig.'},
+  {id:'p067',n:'Citroenmelisse',lat:'Melissa officinalis',cat:'plant',sun:'halfschaduw',w:5,pr:[7,8],fe:[4,5],bl:[6,8],em:'\u{1F34B}',img:'lemon balm melissa herb garden',tip:'Sterk citroenachtige geur.'},
+  {id:'p068',n:'Venkel',lat:'Foeniculum vulgare',cat:'plant',sun:'zon',w:5,pr:[3],fe:[4],bl:[7,9],em:'\u{1F33F}',img:'fennel yellow flowers herb garden',tip:'Anijsgeur. Weg van andere groenten.'},
+  {id:'p069',n:'Knoflook',lat:'Allium sativum',cat:'plant',sun:'zon',w:7,pr:[],fe:[3,4],bl:[6,7],em:'\u{1F9C4}',img:'garlic growing vegetable garden bulb',tip:'Plant in oktober voor beste oogst.'},
+  {id:'p070',n:'Dille',lat:'Anethum graveolens',cat:'plant',sun:'zon',w:4,pr:[],fe:[],bl:[6,9],em:'\u{1F33F}',img:'dill herb feathery green garden',tip:'Zaai direct op de vaste plek.'},
+  {id:'p071',n:'Miscanthus',lat:'Miscanthus sinensis',cat:'gras',sun:'zon',w:7,pr:[3],fe:[4,5],em:'\u{1F33E}',mow:365,img:'miscanthus ornamental grass plumes autumn',tip:'Terugknippen tot 10 cm in vroeg voorjaar.'},
+  {id:'p072',n:'Pluimgras',lat:'Pennisetum alopecuroides',cat:'gras',sun:'zon',w:7,pr:[3],fe:[4],em:'\u{1F33E}',mow:365,img:'pennisetum ornamental grass garden',tip:'Prachtige pluimen in herfst.'},
+  {id:'p073',n:'Blauwe haver',lat:'Helictochloa sempervirens',cat:'gras',sun:'zon',w:10,pr:[3],fe:[4],em:'\u{1F33E}',mow:365,img:'blue oat grass helictotrichon garden',tip:'Blauwgroen blad jaarrond.'},
+  {id:'p074',n:'Gazon (raaigras)',lat:'Lolium perenne',cat:'gras',sun:'zon',w:4,pr:[],fe:[3,5,9],em:'\u{1F33F}',mow:7,img:'lawn grass green mowing garden',tip:'Hoogte 3-5 cm aanhouden.'},
+  {id:'p075',n:'Gazon (veldbeemdgras)',lat:'Poa pratensis',cat:'gras',sun:'zon',w:5,pr:[],fe:[3,5,9],em:'\u{1F33F}',mow:7,img:'lawn poa grass lush green',tip:'Verdraagt droogte beter.'},
+  {id:'p076',n:'Cotoneaster',lat:'Cotoneaster horizontalis',cat:'plant',sun:'zon',w:10,pr:[4,5],fe:[],bl:[10,12],em:'\u{1F33F}',img:'cotoneaster red berries wall ground cover',tip:'Uitstekende bodembedekker.'},
+  {id:'p077',n:'Klimop',lat:'Hedera helix',cat:'plant',sun:'schaduw',w:10,pr:[4,9],fe:[4],em:'\u{1F33F}',img:'ivy hedera helix green climbing wall',tip:'Bodembedekker in schaduw.'},
+  {id:'p078',n:'Pachysandra',lat:'Pachysandra terminalis',cat:'plant',sun:'schaduw',w:7,pr:[4],fe:[4,5],em:'\u{1F33F}',img:'pachysandra groundcover shade white flowers',tip:'Ideaal onder bomen.'},
+  {id:'p079',n:'Vinca',lat:'Vinca minor',cat:'plant',sun:'halfschaduw',w:10,pr:[3,4],fe:[4],bl:[3,5],em:'\u{1F49C}',img:'vinca minor blue periwinkle flowers',tip:'Snelgroeiende bodembedekker.'},
+  {id:'p080',n:'Ajuga',lat:'Ajuga reptans',cat:'plant',sun:'halfschaduw',w:7,pr:[6],fe:[4],bl:[4,6],em:'\u{1F499}',img:'ajuga reptans blue carpet flowers',tip:'Uitbreiding door uitlopers.'},
+  {id:'p081',n:'Zonnebloem',lat:'Helianthus annuus',cat:'bloem',sun:'zon',w:4,pr:[],fe:[5,6,7],bl:[7,9],em:'\u{1F33B}',img:'sunflower tall yellow summer garden',tip:'Zaai na de laatste vorst.'},
+  {id:'p082',n:'Cosmos',lat:'Cosmos bipinnatus',cat:'bloem',sun:'zon',w:5,pr:[],fe:[5,6],bl:[6,10],em:'\u{1F338}',img:'cosmos pink white annual flowers garden',tip:'Makkelijk uit zaad. Lang bloeiend.'},
+  {id:'p083',n:'Zinnia',lat:'Zinnia elegans',cat:'bloem',sun:'zon',w:3,pr:[],fe:[5,6],bl:[6,9],em:'\u{1F338}',img:'zinnia colorful annual flowers garden',tip:'Hoe meer knippen hoe meer bloemen.'},
+  {id:'p084',n:'Marigold',lat:'Tagetes',cat:'bloem',sun:'zon',w:4,pr:[],fe:[5,6],bl:[6,9],em:'\u{1F7E1}',img:'marigold tagetes orange yellow flowers',tip:'Houdt bladluizen weg.'},
+  {id:'p085',n:'Petunia',lat:'Petunia hybrida',cat:'bloem',sun:'zon',w:2,pr:[],fe:[5,6,7,8],bl:[5,10],em:'\u{1F49C}',img:'petunia purple pink hanging basket',tip:'Regelmatig bemesten voor bloei.'},
+  {id:'p086',n:'Begonia',lat:'Begonia tuberhybrida',cat:'bloem',sun:'halfschaduw',w:3,pr:[],fe:[5,6,7],bl:[5,10],em:'\u{1F7E0}',img:'begonia tuberous orange pink pot',tip:'Knollen graven bij eerste vorst.'},
+  {id:'p087',n:'Fuchsia',lat:'Fuchsia',cat:'bloem',sun:'halfschaduw',w:2,pr:[3,4],fe:[5,6,7],bl:[5,10],em:'\u{1F33A}',img:'fuchsia hanging pink purple flowers',tip:'Naar binnen bij vorst.'},
+  {id:'p088',n:'Impatiens',lat:'Impatiens walleriana',cat:'bloem',sun:'halfschaduw',w:2,pr:[],fe:[5,6,7],bl:[5,10],em:'\u{1F338}',img:'impatiens busy lizzie shade pink flowers',tip:'Warm en vochtig houden.'},
+  {id:'p089',n:'Lobelia',lat:'Lobelia erinus',cat:'bloem',sun:'zon',w:3,pr:[],fe:[5,6,7],bl:[5,10],em:'\u{1F499}',img:'lobelia blue edging plant container',tip:'Uitstekend als randplant.'},
+  {id:'p090',n:'Verbena',lat:'Verbena hybrida',cat:'bloem',sun:'zon',w:4,pr:[],fe:[5,6,7],bl:[5,10],em:'\u{1F338}',img:'verbena colorful purple pink garden summer',tip:'Uitstekend voor vlinders.'},
+  {id:'p091',n:'Agave',lat:'Agave americana',cat:'plant',sun:'zon',w:14,pr:[],fe:[],em:'\u{1F335}',img:'agave succulent garden spiky dramatic',tip:'Droogtebestendig. Bescherm bij -5.'},
+  {id:'p092',n:'Yucca',lat:'Yucca filamentosa',cat:'plant',sun:'zon',w:14,pr:[3],fe:[4],bl:[7,8],em:'\u{1F33F}',img:'yucca plant garden white flowers spikes',tip:'Volledig winterhard in NL.'},
+  {id:'p093',n:'Aloe vera',lat:'Aloe vera',cat:'plant',sun:'zon',w:14,pr:[],fe:[],em:'\u{1F335}',img:'aloe vera succulent plant pot',tip:'Niet winterhard. Binnenshuis in NL.'},
+  {id:'p094',n:'Bambus',lat:'Phyllostachys aurea',cat:'plant',sun:'zon',w:4,pr:[4,5],fe:[4,5],em:'\u{1F38B}',img:'bamboo phyllostachys green garden',tip:'Groeibegrenzer verplicht!'},
+  {id:'p095',n:'Pampasgras',lat:'Cortaderia selloana',cat:'gras',sun:'zon',w:7,pr:[3],fe:[4],em:'\u{1F33E}',mow:365,img:'pampas grass cortaderia white plumes garden',tip:'Snoeien met handschoenen!'},
+  {id:'p096',n:'Phormium',lat:'Phormium tenax',cat:'plant',sun:'zon',w:5,pr:[3],fe:[4,5],em:'\u{1F33F}',img:'phormium new zealand flax garden',tip:'Halfwinterhard. Mulchen bij vorst.'},
+  {id:'p097',n:'Aardbei',lat:'Fragaria ananassa',cat:'plant',sun:'zon',w:3,pr:[3,10],fe:[4,5],bl:[6,7],em:'\u{1F353}',img:'strawberry plant red fruit garden',tip:'Uitlopers verwijderen voor grote vruchten.'},
+  {id:'p098',n:'Framboos',lat:'Rubus idaeus',cat:'plant',sun:'zon',w:4,pr:[2,3],fe:[3,4],bl:[7,8],em:'\u{1FAD0}',img:'raspberry canes red fruit garden',tip:'Snoei oude canes na de oogst.'},
+  {id:'p099',n:'Blauwe bes',lat:'Vaccinium corymbosum',cat:'plant',sun:'zon',w:4,pr:[2,3],fe:[4,5],bl:[7,8],em:'\u{1FAD0}',img:'blueberry bush fruit garden summer',tip:'Zure grond vereist (pH 4.5-5.5).'},
+  {id:'p100',n:'Rode bes',lat:'Ribes rubrum',cat:'plant',sun:'halfschaduw',w:5,pr:[2,3],fe:[3,4],bl:[6,7],em:'\u{1F534}',img:'redcurrant ribes rubrum berries garden',tip:'Verdraagt halfschaduw goed.'},
+  {id:'p101',n:'Kruisbes',lat:'Ribes uva-crispa',cat:'plant',sun:'zon',w:5,pr:[2,3],fe:[3,4],bl:[6,7],em:'\u{1F7E2}',img:'gooseberry ribes fruit bush garden',tip:'Snoei bevordert grote vruchten.'},
+  {id:'p102',n:'Braam',lat:'Rubus fruticosus',cat:'plant',sun:'zon',w:5,pr:[2,3],fe:[3,4],bl:[8,9],em:'\u{26AB}',img:'blackberry canes fruit garden wild',tip:'Snoei canes na oogst.'},
+  {id:'p103',n:'Wingerd (druif)',lat:'Vitis vinifera',cat:'plant',sun:'zon',w:7,pr:[2,3],fe:[4,5],bl:[9,10],em:'\u{1F347}',img:'grapevine vineyard grapes fruit garden',tip:'Fors terugsnoeien in de winter.'},
+  {id:'p104',n:'Waterlelie',lat:'Nymphaea',cat:'bloem',sun:'zon',w:0,pr:[4,5],fe:[5,6,7],bl:[6,9],em:'\u{1F338}',img:'water lily nymphaea pond pink flowers',tip:'Meststabletjes voor betere bloei.'},
+  {id:'p105',n:'Lisdodde',lat:'Typha latifolia',cat:'plant',sun:'zon',w:0,pr:[4,5],fe:[],bl:[7,9],em:'\u{1F33E}',img:'bulrush typha pond water edge',tip:'Invasief; in gesloten mand planten.'},
+  {id:'p106',n:'Klaproos',lat:'Papaver rhoeas',cat:'bloem',sun:'zon',w:7,pr:[],fe:[],bl:[5,7],em:'\u{1F33A}',img:'poppy red field papaver flowers',tip:'Zelfzaaiend jaarlijkse.'},
+  {id:'p107',n:'Korenbloem',lat:'Centaurea cyanus',cat:'bloem',sun:'zon',w:7,pr:[],fe:[],bl:[5,8],em:'\u{1F499}',img:'cornflower centaurea blue field flowers',tip:'Uitstekend voor bijen.'},
+  {id:'p108',n:'Kamille',lat:'Matricaria chamomilla',cat:'plant',sun:'zon',w:7,pr:[],fe:[],bl:[5,8],em:'\u{1F33C}',img:'chamomile matricaria white daisy flowers',tip:'Zelfzaaiend. Bloemen oogsten voor thee.'},
+  {id:'p109',n:'Berenklauw',lat:'Heracleum sphondylium',cat:'plant',sun:'halfschaduw',w:7,pr:[],fe:[],bl:[6,8],em:'\u{1F33F}',img:'hogweed heracleum white umbel native',tip:'Inheemse plant.'},
+  {id:'p110',n:'Wilde marjolein',lat:'Origanum vulgare',cat:'plant',sun:'zon',w:10,pr:[],fe:[],bl:[7,9],em:'\u{1F33F}',img:'wild marjoram origanum pink flowers',tip:'Uitstekende bijenplant.'},
+  {id:'p111',n:'Leptospermum',lat:'Leptospermum scoparium',cat:'plant',sun:'zon',w:7,pr:[4,5],fe:[4,5],bl:[5,7],em:'\u{1F338}',img:'leptospermum manuka pink flowers shrub',tip:'Australisch; bescherm bij strenge vorst.'},
+  {id:'p112',n:'Hebe',lat:'Hebe speciosa',cat:'plant',sun:'zon',w:5,pr:[4,5],fe:[4,5],bl:[6,10],em:'\u{1F49C}',img:'hebe flowering shrub purple veronica',tip:'Halfwinterhard.'},
+  {id:'p113',n:'Lavatera',lat:'Lavatera trimestris',cat:'bloem',sun:'zon',w:5,pr:[3,4],fe:[4,5],bl:[6,9],em:'\u{1F338}',img:'lavatera mallow pink annual flowers',tip:'Snel groeiend. Fors terugsnoeien.'},
+  {id:'p114',n:'Gaura',lat:'Oenothera lindheimeri',cat:'bloem',sun:'zon',w:7,pr:[3,4],fe:[4],bl:[6,10],em:'\u{1F90D}',img:'gaura white airy flowers garden wind',tip:'Elegant bewegend in de wind.'},
+  {id:'p115',n:'Salvia microphylla',lat:'Salvia microphylla',cat:'plant',sun:'zon',w:7,pr:[3,4],fe:[4,5],bl:[5,11],em:'\u{1F534}',img:'salvia microphylla red hot lips flowers',tip:'Halfharde salvia met lange bloeitijd.'},
+  {id:'p116',n:'Olifantsoor',lat:'Alocasia',cat:'plant',sun:'halfschaduw',w:5,pr:[],fe:[4,5,6,7,8],em:'\u{1F33F}',img:'alocasia large tropical leaves dramatic',tip:'Buiten in zomer; binnen bij vorst.'},
+  {id:'p117',n:'Bananenplant',lat:'Musa basjoo',cat:'plant',sun:'zon',w:3,pr:[],fe:[4,5,6,7,8],em:'\u{1F34C}',img:'musa basjoo banana hardy garden tropical',tip:'Winterhard tot -10 met bescherming.'},
+  {id:'p118',n:'Canna',lat:'Canna indica',cat:'bloem',sun:'zon',w:3,pr:[],fe:[4,5,6,7],bl:[7,9],em:'\u{1F33A}',img:'canna tropical flowers red orange garden',tip:'Knollen graven voor de winter.'},
+  {id:'p119',n:'Dahlia decoratief',lat:'Dahlia decorativa',cat:'bloem',sun:'zon',w:3,pr:[],fe:[5,6,7],bl:[7,10],em:'\u{1F338}',img:'dahlia decorative large flowers garden',tip:'Knollen graven bij eerste vorst.'},
+  {id:'p120',n:'Strelitzia',lat:'Strelitzia reginae',cat:'bloem',sun:'zon',w:5,pr:[],fe:[4,5,6,7],bl:[3,10],em:'\u{1F338}',img:'strelitzia bird of paradise orange flower',tip:'Niet winterhard. Binnen bij 5 graden.'},
+  {id:'p121',n:'Snoepappelboom',lat:'Malus toringo',cat:'boom',sun:'zon',w:10,pr:[2,3],fe:[3,4],bl:[4,5],em:'\u{1F338}',img:'crab apple malus blossom spring pink',tip:'Sierappel met prachtige bloesem.'},
+  {id:'p122',n:'Amberboom',lat:'Liquidambar styraciflua',cat:'boom',sun:'zon',w:7,pr:[],fe:[3,4],bl:[10,11],em:'\u{1F342}',img:'liquidambar autumn colour leaves spectacular',tip:'Spectaculaire herfstkleuren.'},
+  {id:'p123',n:'Berk',lat:'Betula pendula',cat:'boom',sun:'zon',w:7,pr:[],fe:[3,4],bl:[9,11],em:'\u{1F33F}',img:'silver birch betula white bark elegant',tip:'Witte schors is decoratief.'},
+  {id:'p124',n:'Kornoelje',lat:'Cornus mas',cat:'boom',sun:'halfschaduw',w:7,pr:[5,6],fe:[3,4],bl:[2,3],em:'\u{1F49B}',img:'cornus mas cornelian cherry yellow winter',tip:'Vroegste bloei. Eetbare vruchten.'},
+  {id:'p125',n:'Amelanchier',lat:'Amelanchier lamarckii',cat:'boom',sun:'zon',w:7,pr:[5,6],fe:[3,4],bl:[4,5],em:'\u{1F338}',img:'amelanchier serviceberry blossom spring white',tip:'Uitstekende vier-seizoensboom.'},
+  {id:'p126',n:'Tomaat',lat:'Solanum lycopersicum',cat:'plant',sun:'zon',w:2,pr:[],fe:[5,6,7,8],bl:[7,9],em:'\u{1F345}',img:'tomato plant red ripening vegetable garden',tip:'Uitgeizen voor compacte groei.'},
+  {id:'p127',n:'Courgette',lat:'Cucurbita pepo',cat:'plant',sun:'zon',w:3,pr:[],fe:[5,6,7],bl:[6,9],em:'\u{1F7E2}',img:'courgette zucchini plant vegetable garden',tip:'Oogst regelmatig voor beste smaak.'},
+  {id:'p128',n:'Komkommer',lat:'Cucumis sativus',cat:'plant',sun:'zon',w:2,pr:[],fe:[5,6,7],bl:[6,9],em:'\u{1F952}',img:'cucumber plant growing vegetable garden',tip:'Houdt van warmte en vochtige lucht.'},
+  {id:'p129',n:'Paprika',lat:'Capsicum annuum',cat:'plant',sun:'zon',w:3,pr:[],fe:[5,6,7,8],bl:[7,9],em:'\u{1FAD1}',img:'pepper capsicum plant vegetable garden red',tip:'Plant na ijsheiligen.'},
+  {id:'p130',n:'Sla',lat:'Lactuca sativa',cat:'plant',sun:'halfschaduw',w:2,pr:[],fe:[4,5,6],bl:[4,9],em:'\u{1F96C}',img:'lettuce salad rows kitchen garden green',tip:'Zaai in fases voor continue oogst.'},
+  {id:'p131',n:'Distelbloem',lat:'Eryngium planum',cat:'bloem',sun:'zon',w:10,pr:[3,4],fe:[4],bl:[7,9],em:'\u{1F499}',img:'eryngium sea holly blue spiky flowers',tip:'Droogtebestendig. Blauw-stekelig.'},
+  {id:'p132',n:'Lupine',lat:'Lupinus polyphyllus',cat:'bloem',sun:'zon',w:5,pr:[6,7],fe:[4],bl:[5,7],em:'\u{1F338}',img:'lupins lupinus tall colorful garden',tip:'Verbetert bodem door stikstoffixatie.'},
+  {id:'p133',n:'Digitalis',lat:'Digitalis purpurea',cat:'bloem',sun:'halfschaduw',w:5,pr:[],fe:[4],bl:[5,7],em:'\u{1F49C}',img:'foxglove digitalis purple spikes biennial',tip:'Tweejaarlijks. Alle delen giftig.'},
+  {id:'p134',n:'Verbascum',lat:'Verbascum olympicum',cat:'bloem',sun:'zon',w:10,pr:[3],fe:[4],bl:[6,8],em:'\u{1F33C}',img:'verbascum mullein tall yellow spires dramatic',tip:'Indrukwekkende hoge sprieten.'},
+  {id:'p135',n:'Nigella',lat:'Nigella damascena',cat:'bloem',sun:'zon',w:7,pr:[],fe:[],bl:[5,8],em:'\u{1F499}',img:'nigella love in mist blue flowers garden',tip:'Juffertje-in-het-groen. Zelfzaaiend.'},
+];
+
+/* ============================================================
+   DATABASE
+   ============================================================ */
+let DB={zones:[],plants:[],tasks:[],log:[]};
+const KEYS={zones:'mt_z',plants:'mt_p',tasks:'mt_t',log:'mt_l'};
+function loadDB(){Object.keys(KEYS).forEach(k=>{try{DB[k]=JSON.parse(localStorage.getItem(KEYS[k])||'[]');}catch(e){DB[k]=[];}});}
+function saveDB(){Object.keys(KEYS).forEach(k=>localStorage.setItem(KEYS[k],JSON.stringify(DB[k])));}
+function uid(){return Math.random().toString(36).substr(2,9);}
+
+/* ============================================================
+   WEATHER — Open-Meteo (geen API key)
+   ============================================================ */
+let WX=null,wxLat=null,wxLon=null;
+
+async function fetchWx(force=false){
+  if(!force&&WX)return;
+  try{
+    const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:7000}));
+    wxLat=p.coords.latitude;wxLon=p.coords.longitude;
+    localStorage.setItem('mt_lat',wxLat);localStorage.setItem('mt_lon',wxLon);
+  }catch(e){
+    wxLat=parseFloat(localStorage.getItem('mt_lat'))||51.48;
+    wxLon=parseFloat(localStorage.getItem('mt_lon'))||5.43;
+  }
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${wxLat}&longitude=${wxLon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&current_weather=true&timezone=auto&forecast_days=7`;
+    const d=await (await fetch(url)).json();
+    WX={cur:d.current_weather,time:d.daily.time,precip:d.daily.precipitation_sum,tmax:d.daily.temperature_2m_max,tmin:d.daily.temperature_2m_min,code:d.daily.weathercode};
+    localStorage.setItem('mt_wx',JSON.stringify({d:WX,ts:Date.now()}));
+    document.getElementById('ftLoc').textContent=`${wxLat.toFixed(2)}, ${wxLon.toFixed(2)}`;
+    applyWxUI();
+  }catch(e){
+    const c=localStorage.getItem('mt_wx');
+    if(c){try{const o=JSON.parse(c);if(Date.now()-o.ts<3.6e6){WX=o.d;applyWxUI();}}catch(e2){}}
+  }
+}
+
+function wIco(code){
+  if(code===0)return'\u2600\uFE0F';
+  if(code<=2)return'\u26C5';
+  if(code<=3)return'\u2601\uFE0F';
+  if(code<=49)return'\uD83C\uDF2B\uFE0F';
+  if(code<=69)return'\uD83C\uDF27\uFE0F';
+  if(code<=79)return'\u2744\uFE0F';
+  if(code<=99)return'\u26C8\uFE0F';
+  return'\u2601\uFE0F';
+}
+
+function rainOnDate(ds){
+  if(!WX)return 0;
+  const i=WX.time.indexOf(ds);
+  return i>=0?(WX.precip[i]||0):0;
+}
+
+function applyWxUI(){
+  if(!WX)return;
+  const pill=document.getElementById('wxPill');
+  pill.style.display='flex';
+  document.getElementById('wxIco').textContent=wIco(WX.cur.weathercode);
+  document.getElementById('wxTemp').textContent=Math.round(WX.cur.temperature)+'\u00B0';
+  const r0=WX.precip[0]||0;
+  document.getElementById('wxRain').textContent=r0>1?r0.toFixed(1)+'mm':'';
+
+  // Banners
+  const bel=document.getElementById('wxBanners');
+  let h='';
+  if(r0>3){
+    h+=`<div class="wxb rain">
+      <div class="wxb-ico">\uD83C\uDF27\uFE0F</div>
+      <div class="wxb-body">
+        <div class="wxb-title">Geen water nodig vandaag</div>
+        <div class="wxb-sub">${r0.toFixed(1)} mm regen verwacht \u2014 watertaken uitgesteld</div>
+      </div>
+      <button class="wxb-btn" onclick="autoSkipWater()">Overslaan</button>
+    </div>`;
+  }
+  // Coming rain days (next 3)
+  const rainDays=[];
+  const DNN=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+  for(let i=1;i<=3;i++){
+    if((WX.precip[i]||0)>3){
+      const dd=new Date(WX.time[i]+'T00:00:00');
+      rainDays.push(DNN[dd.getDay()]+' '+WX.precip[i].toFixed(1)+'mm');
+    }
+  }
+  if(rainDays.length){
+    h+=`<div class="wxb warn">
+      <div class="wxb-ico">\uD83D\uDCC5</div>
+      <div class="wxb-body">
+        <div class="wxb-title">Regen komende dagen</div>
+        <div class="wxb-sub">${rainDays.join(', ')} \u2014 taken worden automatisch aangepast bij genereren</div>
+      </div>
+    </div>`;
+  }
+  // Frost tomorrow
+  const tm1=WX.tmin[1]??99;
+  if(tm1<2){
+    h+=`<div class="wxb frost">
+      <div class="wxb-ico">\uD83C\uDF21\uFE0F</div>
+      <div class="wxb-body">
+        <div class="wxb-title">Vorstrisico morgen</div>
+        <div class="wxb-sub">Min. ${tm1.toFixed(1)}\u00B0C \u2014 controleer vorstgevoelige planten</div>
+      </div>
+    </div>`;
+  }
+  bel.innerHTML=h;
+
+  // 7-day detail sheet
+  const dnames=['Vandaag','Morgen','Overmorgen'];
+  const ALLD=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+  document.getElementById('wxBody').innerHTML=WX.time.map((t,i)=>{
+    const dd=new Date(t+'T00:00:00');
+    const nm=i<3?dnames[i]:ALLD[dd.getDay()]+' '+dd.getDate();
+    const rain=WX.precip[i]||0,mx=WX.tmax[i],mn=WX.tmin[i];
+    const isFrost=mn<2,hasRain=rain>1;
+    return`<div class="wxd-row">
+      <div class="wxd-name">${nm}</div>
+      <div class="wxd-ico">${wIco(WX.code[i])}</div>
+      <div class="wxd-temps">${Math.round(mx)}\u00B0 <span>${Math.round(mn)}\u00B0</span></div>
+      <div class="wxd-right">
+        ${hasRain?`<div class="wxd-rain">\uD83D\uDCA7 ${rain.toFixed(1)} mm</div>`:''}
+        <div class="wxd-note ${isFrost?'frost':(!hasRain?'ok':'')}">${isFrost?'\u2744 Vorst':(!hasRain?'\u2713 Water geven':'')}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderWxStrip();
+  if(r0>5)autoSkipWater();
+}
+
+function autoSkipWater(){
+  const td=today();let n=0;
+  DB.tasks.forEach(t=>{if(t.type==='water'&&t.due===td&&t.status!=='done'&&!t._wx){t.due=addDays(td,1);t._wx=true;n++;}});
+  if(n){saveDB();toast(`${n} watertaak${n>1?'en':''} uitgesteld wegens regen`);renderPage(curP);}
+}
+
+function renderWxStrip(){
+  const el=document.getElementById('wxStrip');
+  if(!WX||!el)return;
+  const ALLD=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+  el.innerHTML=WX.time.map((t,i)=>{
+    const dd=new Date(t+'T00:00:00');
+    const rain=WX.precip[i]||0;
+    const isRain=rain>3,isFrost=(WX.tmin[i]||0)<2;
+    const cls=isFrost?'frost':isRain?'raining':'';
+    return`<div class="wx-day-pill ${cls}">${wIco(WX.code[i])} ${ALLD[dd.getDay()]} ${Math.round(WX.tmax[i])}\u00B0${isRain?' \uD83D\uDCA7'+rain.toFixed(0)+'mm':''}</div>`;
+  }).join('');
+}
+
+/* ============================================================
+   UNSPLASH IMAGE URL (source.unsplash.com - random by keyword)
+   Falls back to plant emoji on error
+   ============================================================ */
+function imgUrl(p,w=400,h=160){
+  const pdb=p.dbid?PDB.find(x=>x.id===p.dbid):null;
+  const kw=encodeURIComponent((pdb?.img||p.n+' plant garden').replace(/\+/g,' '));
+  return`https://source.unsplash.com/${w}x${h}/?${kw}`;
+}
+function thumbUrl(p){return imgUrl(p,80,80);}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+function applyTheme(lm){document.documentElement.classList.toggle('lm',lm);document.getElementById('themeColor').content=lm?'#f4f2ee':'#060b07';}
+function toggleTheme(){const lm=!document.documentElement.classList.contains('lm');localStorage.setItem('mt_theme',lm?'lm':'dm');applyTheme(lm);}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+let curP='pToday';
+function goTab(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.p===id));
+  document.getElementById(id).classList.add('active');
+  curP=id;
+  document.getElementById('wrap').scrollTop=0;
+  renderPage(id);
+}
+function fabClick(){
+  if(curP==='pZones')openZSheet();
+  else if(curP==='pPlanten')openAddPlant();
+  else openTaskSheet();
+}
+
+/* ============================================================
+   SHEETS
+   ============================================================ */
+function openSheet(id){closeAll();document.getElementById('bd').classList.add('open');document.getElementById(id).classList.add('open');}
+function closeSheet(id){document.getElementById(id).classList.remove('open');document.getElementById('bd').classList.remove('open');}
+function closeAll(){document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));document.getElementById('bd').classList.remove('open');}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let _tt;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2700);}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const MNL=['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+const MFULL=['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+const DNLS=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+function today(){return new Date().toISOString().split('T')[0];}
+function toDS(d){return d.toISOString().split('T')[0];}
+function parseD(s){return new Date(s+'T00:00:00');}
+function addDays(s,n){const d=parseD(s);d.setDate(d.getDate()+n);return toDS(d);}
+function isToday(s){return s===today();}
+function isPast(s){return s<today();}
+function tCls(t){return{water:'tw',snoei:'ts',bemest:'tf',maai:'tm',kalk:'tk',behandel:'tb',verticuteer:'tv',overig:'to'}[t]||'to';}
+function tBCls(t){return{water:'bw',snoei:'bs',bemest:'bf',maai:'bm',kalk:'bk',behandel:'bb',verticuteer:'bv',overig:'bo'}[t]||'bo';}
+function tColor(t){return{water:'var(--cw)',snoei:'var(--cs)',bemest:'var(--cf)',maai:'var(--cm)',kalk:'var(--ck)',behandel:'var(--cb2)',verticuteer:'var(--cov)',overig:'var(--t4)'}[t]||'var(--t4)';}
+function tLbl(t){return{water:'\uD83D\uDCA7 Water',snoei:'\u2702 Snoei',bemest:'\u2B21 Bemest',maai:'\u25A4 Maai',kalk:'\u25C8 Kalk',behandel:'\u2295 Behandel',verticuteer:'\u25A6 Vert.',overig:'\u25AA Overig'}[t]||t;}
+function tShort(t){return{water:'Water',snoei:'Snoei',bemest:'Bemest',maai:'Maai',kalk:'Kalk',behandel:'Behandel',verticuteer:'Vert.',overig:'Overig'}[t]||t;}
+function tEm(t){return{water:'\uD83D\uDCA7',snoei:'\u2702',bemest:'\u2B21',maai:'\u25A4',kalk:'\u25C8',behandel:'\u2295',verticuteer:'\u25A6',overig:'\u25AA'}[t]||'\u25AA';}
+function zName(zid){const z=DB.zones.find(x=>x.id===zid);return z?z.name:'\u2014';}
+const ZCOLS=['#3d6b5a','#5a6b3d','#6b3d5a','#3d5a6b','#6b5a3d','#6b3d3d','#3d3d6b','#5a5a5a'];
+
+/* ============================================================
+   RENDER VANDAAG
+   ============================================================ */
+function renderVandaag(){
+  const h=new Date().getHours();
+  document.getElementById('greetTxt').textContent=h<12?'Goedemorgen':h<18?'Goedemiddag':'Goedenavond';
+  const d=new Date();
+  document.getElementById('greetDate').textContent=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][d.getDay()]+' '+d.getDate()+' '+MFULL[d.getMonth()]+' '+d.getFullYear();
+  const op=DB.tasks.filter(t=>t.status!=='done').length;
+  const dn=DB.tasks.filter(t=>t.status==='done').length;
+  document.getElementById('statGrid').innerHTML=scrd(op,'Open taken')+scrd(DB.plants.length,'Planten')+scrd(dn,'Gedaan');
+  const tot=DB.tasks.length;
+  const pct=tot?Math.round(dn/tot*100):0;
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progFill').style.width=pct+'%';
+  const ov=DB.tasks.filter(t=>t.status!=='done'&&isPast(t.due));
+  const ob=document.getElementById('odBanner');
+  if(ov.length){
+    ob.className='od';
+    ob.innerHTML=`<span class="od-i">&#9672;</span><span class="od-t">${ov.length} te late taak${ov.length>1?'en':''}</span><span class="od-a">&#8250;</span>`;
+    ob.onclick=()=>goTab('pPlanning');
+  }else ob.innerHTML='';
+  const tl=DB.tasks.filter(t=>t.status!=='done'&&isToday(t.due));
+  document.getElementById('todayList').innerHTML=tl.length?tl.map(t=>trHTML(t,true)).join(''):'<div style="color:var(--t3);font-size:12px;padding:6px 0 10px">Geen taken voor vandaag \u2713</div>';
+  const up=DB.tasks.filter(t=>t.status!=='done'&&t.due>today()).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,3);
+  document.getElementById('upcomingList').innerHTML=up.length?up.map(t=>trHTML(t)).join(''):'<div style="color:var(--t3);font-size:12px;padding:6px 0 10px">Geen aankomende taken</div>';
+  document.getElementById('homeZones').innerHTML=DB.zones.slice(0,3).map(z=>zcHTML(z)).join('')||'<div style="color:var(--t3);font-size:12px;padding:0 14px 10px">Nog geen zones</div>';
+}
+function scrd(n,l){return`<div class="stat-item"><div class="stat-num${l==='Open taken'&&n>0?' green':''}">${n}</div><div class="stat-lbl">${l}</div></div>`;}
+
+/* ============================================================
+   RENDER ZONES
+   ============================================================ */
+function renderZones(){
+  const el=document.getElementById('zoneList'),em=document.getElementById('zoneEmpty');
+  if(!DB.zones.length){el.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';
+  el.innerHTML=DB.zones.map(z=>zcHTML(z,true)).join('');
+}
+function zcHTML(z,full=false){
+  const pl=DB.plants.filter(p=>p.zid===z.id);
+  const ot=DB.tasks.filter(t=>t.zid===z.id&&t.status!=='done').length;
+  const chips=pl.slice(0,5).map(p=>`<div class="zc-chip">${p.em||'\uD83C\uDF31'} ${p.cn||p.n}</div>`).join('');
+  const more=pl.length>5?`<div class="zc-chip">+${pl.length-5}</div>`:'';
+  const btns=full?`<div class="zc-acts"><button class="zc-btn" onclick="event.stopPropagation();openAddPlant('${z.id}')">+ Plant</button><button class="zc-btn del" onclick="event.stopPropagation();delZone('${z.id}')">&#10005;</button></div>`:'';
+  return`<div class="zcard" onclick="openZD('${z.id}')">
+    <div class="zcard-accent" style="background:${z.color||'var(--acc)'}"></div>
+    <div class="zc-body">
+      <div class="zc-top">
+        <div class="zc-name">${z.name}</div>
+        <div class="zc-cnt ${ot?'':'zero'}">${ot?ot+' open':'✓'}</div>
+      </div>
+      <div class="zc-meta">${{zon:'☀️ Volle zon',halfschaduw:'◑ Halfschaduw',schaduw:'◐ Schaduw'}[z.sun]||z.sun}${z.desc?' · '+z.desc:''}</div>
+      ${pl.length?`<div class="zc-chips">${chips}${more}</div>`:''}
+      ${full?`<div class="zc-foot"><button class="zc-btn" onclick="event.stopPropagation();openAddPlant('${z.id}')">+ Plant toevoegen</button><button class="zc-btn del" onclick="event.stopPropagation();delZone('${z.id}')">Verwijderen</button></div>`:''}
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   RENDER PLANTEN (foto-kaarten)
+   ============================================================ */
+let pfZ='all';
+function setPlantFilter(zid){
+  pfZ=zid;
+  document.querySelectorAll('#plantFilter .fchip').forEach(c=>c.classList.toggle('on',c.dataset.z===zid));
+  renderPlanten();
+}
+function renderPlanten(){
+  const fc=document.getElementById('plantFilter');
+  let ch=`<div class="fchip ${pfZ==='all'?'on':''}" data-z="all" onclick="setPlantFilter('all')">Alle</div>`;
+  DB.zones.forEach(z=>{ch+=`<div class="fchip ${pfZ===z.id?'on':''}" data-z="${z.id}" onclick="setPlantFilter('${z.id}')">${z.name}</div>`;});
+  fc.innerHTML=ch;
+  const pl=pfZ==='all'?DB.plants:DB.plants.filter(p=>p.zid===pfZ);
+  const gr=document.getElementById('plantGrid'),em=document.getElementById('plantEmpty');
+  if(!pl.length){gr.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';
+  gr.innerHTML=pl.map(p=>ppcHTML(p)).join('');
+  gr.querySelectorAll('img[data-src]').forEach(img=>{
+    const tmp=new Image();
+    tmp.onload=()=>{img.src=img.dataset.src;img.classList.remove('hidden');img.classList.add('show');};
+    tmp.onerror=()=>{img.style.display='none';const fb=img.nextElementSibling;if(fb)fb.style.display='flex';};
+    tmp.src=img.dataset.src;
+  });
+}
+function ppcHTML(p){ /* feed card */
+  const z=DB.zones.find(x=>x.id===p.zid);
+  const tasks=DB.tasks.filter(t=>t.pid===p.id&&t.status!=='done').sort((a,b)=>a.due.localeCompare(b.due));
+  const src=imgUrl(p);
+  const em=p.em||'\uD83C\uDF31';
+  const chips=tasks.slice(0,3).map(t=>{
+    const tmap={water:'water',snoei:'snoei',bemest:'bemest',maai:'maai'}; const cls=t._wx?'rain':(tmap[t.type]||'overig'); 
+    return`<div class="feed-rxn ${cls}" onclick="event.stopPropagation();doToggle('${t.id}');renderPlanten()">${tEm(t.type)} ${tShort(t.type)} <span style="opacity:.65">${t.due.slice(5).replace('-','/')}</span></div>`;
+  }).join('');
+  return`<div class="feed-card" onclick="openPD('${p.id}')">
+    <div class="feed-img-wrap"><img class="feed-img hidden" data-src="${src}" src="" alt="${p.cn||p.n}"><div class="ppc-em" style="display:none">${em}</div><div class="feed-img-ov"></div><div class="feed-img-badge">${p.cat||'plant'}</div><div class="feed-img-top-right"><button class="feed-img-btn" onclick="event.stopPropagation();openTaskForPlant('${p.id}')">+</button></div><div class="ppc-body"><div class="ppc-name">${p.cn||p.n}</div>${p.lat?`<div class="ppc-lat">${p.lat}</div>`:''} ${z?`<div class="ppc-zone">&#11041; ${z.name}</div>`:''}</div></div>
+    <div class="ppc-em" style="display:none">${em}</div>
+    
+    ${tasks.length?`<div class="feed-reactions">${chips}${tasks.length>3?`<div class="feed-rxn overig">+${tasks.length-3}</div>`:''}</div>`:''}
+  </div>`;
+}
+
+/* ============================================================
+   RENDER PLANNING — kalender-view per plant per dag
+   ============================================================ */
+let planY,planM;
+const planSel={};
+function initPlan(){const n=new Date();planY=n.getFullYear();planM=n.getMonth();}
+function planNav(dir){planM+=dir;if(planM<0){planM=11;planY--;}if(planM>11){planM=0;planY++;}renderPlanning();}
+
+function renderPlanning(){
+  document.getElementById('planMo').textContent=MFULL[planM]+' '+planY;
+  renderWxStrip();
+  const dim=new Date(planY,planM+1,0).getDate();
+  const td=today();
+  const ms=`${planY}-${String(planM+1).padStart(2,'0')}`;
+
+  // Group by plant/zone
+  const byP={};
+  DB.tasks.forEach(t=>{
+    if(!t.due||!t.due.startsWith(ms))return;
+    const key=t.pid||(t.zid?'z_'+t.zid:'free');
+    if(!byP[key])byP[key]={pid:t.pid,zid:t.zid,tasks:[]};
+    byP[key].tasks.push(t);
+  });
+
+  const keys=Object.keys(byP);
+  const el=document.getElementById('planList'),em=document.getElementById('planEmpty');
+  if(!keys.length){el.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';
+
+  const DOWrow=`<div class="dow-row">${DNLS.map(d=>`<div class="dow">${d}</div>`).join('')}</div>`;
+
+  el.innerHTML=keys.map(key=>{
+    const {pid,zid,tasks}=byP[key];
+    const plant=pid?DB.plants.find(p=>p.id===pid):null;
+    const zone=zid?DB.zones.find(z=>z.id===zid):null;
+    const name=plant?(plant.cn||plant.n):zone?zone.name:'Vrije taken';
+    const em2=plant?.em||'\u2B21';
+    const cnt=tasks.filter(t=>t.status!=='done').length;
+
+    // day->tasks map
+    const dm={};
+    tasks.forEach(t=>{const d=parseInt(t.due.slice(-2));if(!dm[d])dm[d]=[];dm[d].push(t);});
+    const selDay=planSel[key];
+
+    // Build calendar grid
+    const firstDow=new Date(planY,planM,1).getDay();
+    let cells='';
+    for(let i=0;i<firstDow;i++)cells+=`<div class="day om"><div class="dn"></div></div>`;
+    for(let d=1;d<=dim;d++){
+      const ds=`${planY}-${String(planM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dt=dm[d]||[];
+      const isT=ds===td,isSel=ds===selDay;
+      const types=[...new Set(dt.map(t=>t.type))].slice(0,3);
+      const dots=types.map(t=>{const allDone=dt.filter(x=>x.type===t).every(x=>x.status==='done');return`<div class="ddot ${allDone?'done':''}" style="background:${tColor(t)}"></div>`;}).join('');
+      const rainDot=(rainOnDate(ds)>3)?`<div class="ddot" style="background:var(--cw)"></div>`:'';
+      cells+=`<div class="day ${isT?'today':''} ${isSel?'sel':''}" onclick="selDay('${key}','${ds}')">
+        <div class="dn">${d}</div>
+        <div class="ddots">${dots}${rainDot}</div>
+      </div>`;
+    }
+
+    // Selected day task list
+    let dtList='';
+    if(selDay){
+      const sdd=parseInt(selDay.slice(-2));
+      const sdt=dm[sdd]||[];
+      if(sdt.length){
+        dtList=`<div class="day-tasks">${sdt.map(t=>`<div class="dt-row">
+          <div class="dt-chk ${t.status==='done'?'done':''}" onclick="doToggle('${t.id}');renderPlanning()">&#10003;</div>
+          <div class="dt-name" style="${t.status==='done'?'text-decoration:line-through;color:var(--t3)':''}">${t.title}</div>
+          <div class="dt-bdg" style="background:${tColor(t.type)}20;color:${tColor(t.type)}">${tShort(t.type)}</div>
+        </div>`).join('')}</div>`;
+      }
+    }
+
+    const thumb=plant?`<img class="pcc-thumb" data-src="${thumbUrl(plant)}" src="" alt="${name}">`:`<div class="pcc-thumb-em">${em2}</div>`;
+
+    return`<div class="pcc">
+      <div class="pcc-hdr" onclick="togglePCC('${key}')">
+        ${thumb}
+        <div class="pcc-info"><div class="pcc-name">${name}</div><div class="pcc-zone">${zone?zone.name:''}</div></div>
+        <div class="pcc-cnt ${cnt?'':'zero'}">${cnt||'&#10003;'}</div>
+        <div class="pcc-arr" id="pca_${key}">&#8250;</div>
+      </div>
+      <div id="pcb_${key}">
+        <div class="pcc-cal">${DOWrow}<div class="day-grid">${cells}</div></div>
+        ${dtList}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Lazy thumbnails
+  el.querySelectorAll('img[data-src]').forEach(img=>{
+    const tmp=new Image();tmp.onload=()=>{img.src=img.dataset.src;};tmp.src=img.dataset.src;
+  });
+}
+
+function selDay(key,ds){
+  planSel[key]=(planSel[key]===ds)?null:ds;
+  renderPlanning();
+}
+function togglePCC(key){
+  const b=document.getElementById('pcb_'+key);
+  const a=document.getElementById('pca_'+key);
+  const vis=b.style.display!=='none';
+  b.style.display=vis?'none':'';
+  if(a)a.classList.toggle('open',!vis);
+}
+
+/* ============================================================
+   RENDER MEER
+   ============================================================ */
+function renderMeer(){
+  const z=DB.zones.length,p=DB.plants.length,o=DB.tasks.filter(t=>t.status!=='done').length,d=DB.tasks.filter(t=>t.status==='done').length;
+  const ms=document.getElementById('meerStats');
+  ms.innerHTML=`<div class="ms-card"><div class="ms-n">${z}</div><div class="ms-l">Zones</div></div><div class="ms-card"><div class="ms-n">${p}</div><div class="ms-l">Planten</div></div><div class="ms-card"><div class="ms-n">${o}</div><div class="ms-l">Open</div></div><div class="ms-card"><div class="ms-n">${d}</div><div class="ms-l">Gedaan</div></div>`;
+  document.getElementById('ftPlants').textContent=p;
+}
+
+/* ============================================================
+   RENDER DISPATCH
+   ============================================================ */
+function renderPage(id){
+  if(id==='pToday')renderVandaag();
+  else if(id==='pZones')renderZones();
+  else if(id==='pPlanten')renderPlanten();
+  else if(id==='pPlanning')renderPlanning();
+  else if(id==='pMeer')renderMeer();
+}
+
+/* ============================================================
+   TASK ROW HTML
+   ============================================================ */
+function trHTML(t,acts=false){
+  const done=t.status==='done',late=!done&&t.due<today();
+  const zn=t.zid?` \u00B7 ${zName(t.zid)}`:'';
+  const a=acts&&!done?`<div class="tr-acts"><button class="tr-act" onclick="postpone('${t.id}')">&#8595;</button><button class="tr-act" onclick="skipT('${t.id}')">&#10005;</button></div>`:'';
+  return`<div class="tr ${tCls(t.type)}">
+    <div class="chk ${done?'done':''}" onclick="doToggle('${t.id}')">&#10003;</div>
+    <div class="tr-inf">
+      <div class="tr-ttl" style="${done?'text-decoration:line-through;color:var(--t3)':''}">${late?'<span class="late">! </span>':''}${t.title}<span class="bdg ${tBCls(t.type)}">${tShort(t.type).toUpperCase()}</span></div>
+      <div class="tr-meta">${t.due}${zn}</div>
+    </div>${a}
+  </div>`;
+}
+
+/* ============================================================
+   TASK ACTIONS
+   ============================================================ */
+function doToggle(id){
+  const t=DB.tasks.find(x=>x.id===id);if(!t)return;
+  if(t.status==='done'){t.status='open';}
+  else{
+    t.status='done';
+    DB.log.push({id:uid(),tid:t.id,pid:t.pid||null,type:t.type,at:new Date().toISOString()});
+    if(t.rec&&t.rd){
+      let nxt=addDays(today(),t.rd);
+      if(WX&&rainOnDate(nxt)>5)nxt=addDays(nxt,1);
+      DB.tasks.push({...t,id:uid(),status:'open',due:nxt,_wx:false,at:new Date().toISOString()});
+    }
+  }
+  saveDB();renderPage(curP);
+}
+function postpone(id){const t=DB.tasks.find(x=>x.id===id);if(!t)return;t.due=addDays(t.due,1);saveDB();toast('Uitgesteld naar '+t.due);renderPage(curP);}
+function skipT(id){if(!confirm('Overslaan?'))return;DB.tasks=DB.tasks.filter(x=>x.id!==id);saveDB();renderPage(curP);}
+
+/* ============================================================
+   SYNC ENGINE — genereer voor hele maand met weercheck
+   ============================================================ */
+function syncMonth(){const n=new Date();const c=genMonth(n.getFullYear(),n.getMonth()+1);saveDB();toast(`${c} taken gegenereerd voor ${MFULL[n.getMonth()]}`);renderPage(curP);}
+function syncYear(){let c=0;const yr=new Date().getFullYear();for(let m=1;m<=12;m++)c+=genMonth(yr,m);saveDB();toast(`${c} taken gegenereerd voor ${yr}`);renderPage(curP);}
+
+function genMonth(yr,rawM){
+  let m=rawM;if(m<1){m=12;yr--;}if(m>12){m=1;yr++;}
+  const ms=`${yr}-${String(m).padStart(2,'0')}`;
+  const dim=new Date(yr,m,0).getDate();
+  let c=0;
+  DB.plants.forEach(plant=>{
+    const pdb=plant.dbid?PDB.find(p=>p.id===plant.dbid):null;
+    // WATER
+    const wd=plant.wd||7;
+    if(!DB.tasks.some(t=>t.pid===plant.id&&t.type==='water'&&t.due.startsWith(ms))&&wd>0){
+      let day=1;
+      while(day<=dim){
+        let ds=`${yr}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        if(rainOnDate(ds)>5){const nd=Math.min(day+1,dim);ds=`${yr}-${String(m).padStart(2,'0')}-${String(nd).padStart(2,'0')}`;}
+        DB.tasks.push({id:uid(),status:'open',type:'water',title:`Water geven \u2014 ${plant.cn||plant.n}`,due:ds,prio:'normal',zid:plant.zid,pid:plant.id,rec:true,rd:wd,at:new Date().toISOString()});
+        c++;day+=wd;
+      }
+    }
+    // SNOEI
+    const pm=plant.pm||(pdb?.pr||[]);
+    if(pm.includes(m)&&!DB.tasks.some(t=>t.pid===plant.id&&t.type==='snoei'&&t.due.startsWith(ms))){
+      DB.tasks.push({id:uid(),status:'open',type:'snoei',title:`Snoeien \u2014 ${plant.cn||plant.n}`,due:`${yr}-${String(m).padStart(2,'0')}-10`,prio:'normal',zid:plant.zid,pid:plant.id,at:new Date().toISOString()});c++;
+    }
+    // BEMEST
+    const fm=plant.fm||(pdb?.fe||[]);
+    if(fm.includes(m)&&!DB.tasks.some(t=>t.pid===plant.id&&t.type==='bemest'&&t.due.startsWith(ms))){
+      DB.tasks.push({id:uid(),status:'open',type:'bemest',title:`Bemesten \u2014 ${plant.cn||plant.n}`,due:`${yr}-${String(m).padStart(2,'0')}-15`,prio:'normal',zid:plant.zid,pid:plant.id,at:new Date().toISOString()});c++;
+    }
+    // MAAI
+    const mow=pdb?.mow;
+    if(mow&&plant.cat==='gras'&&m>=3&&m<=11&&!DB.tasks.some(t=>t.pid===plant.id&&t.type==='maai'&&t.due.startsWith(ms))){
+      let day=1;
+      while(day<=dim){
+        const ds=`${yr}-${String(m).padStart(2,'0')}-${String(Math.min(day,dim)).padStart(2,'0')}`;
+        DB.tasks.push({id:uid(),status:'open',type:'maai',title:`Maaien \u2014 ${plant.cn||plant.n}`,due:ds,prio:'normal',zid:plant.zid,pid:plant.id,rec:true,rd:mow,at:new Date().toISOString()});c++;day+=mow;
+      }
+    }
+    // VERTICUTEREN (april)
+    if(plant.cat==='gras'&&m===4&&!DB.tasks.some(t=>t.pid===plant.id&&t.type==='verticuteer'&&t.due.startsWith(ms))){
+      DB.tasks.push({id:uid(),status:'open',type:'verticuteer',title:`Verticuteren \u2014 ${plant.cn||plant.n}`,due:`${yr}-${String(m).padStart(2,'0')}-08`,prio:'high',zid:plant.zid,pid:plant.id,at:new Date().toISOString()});c++;
+    }
+  });
+  return c;
+}
+
+/* ============================================================
+   ZONE FORMS
+   ============================================================ */
+let _eZ=null,_sun='zon',_col=ZCOLS[0];
+function initCC(){
+  document.getElementById('ccPicker').innerHTML=ZCOLS.map((c,i)=>`<div class="cc ${i===0?'on':''}" style="background:${c}" data-c="${c}" onclick="selCol('${c}')"></div>`).join('');
+}
+function selCol(c){_col=c;document.querySelectorAll('.cc').forEach(el=>el.classList.toggle('on',el.dataset.c===c));}
+function setSun(s){_sun=s;document.querySelectorAll('.sun-btn').forEach(b=>b.classList.toggle('on',b.dataset.s===s));}
+function openZSheet(eid=null){
+  _eZ=eid;
+  document.getElementById('sTZ').textContent=eid?'Zone bewerken':'Nieuwe zone';
+  if(eid){const z=DB.zones.find(x=>x.id===eid);document.getElementById('zName').value=z.name;document.getElementById('zDesc').value=z.desc||'';_sun=z.sun;setSun(z.sun);_col=z.color||ZCOLS[0];selCol(_col);}
+  else{document.getElementById('zName').value='';document.getElementById('zDesc').value='';_sun='zon';setSun('zon');_col=ZCOLS[0];selCol(ZCOLS[0]);}
+  openSheet('sZone');
+}
+function saveZone(){
+  const nm=document.getElementById('zName').value.trim();if(!nm){toast('Voer naam in');return;}
+  if(_eZ){const z=DB.zones.find(x=>x.id===_eZ);z.name=nm;z.desc=document.getElementById('zDesc').value.trim();z.sun=_sun;z.color=_col;}
+  else DB.zones.push({id:uid(),name:nm,desc:document.getElementById('zDesc').value.trim(),sun:_sun,color:_col,at:new Date().toISOString()});
+  saveDB();closeSheet('sZone');toast('Zone opgeslagen');renderPage(curP);
+}
+function delZone(zid){
+  if(!confirm('Zone verwijderen?'))return;
+  DB.zones=DB.zones.filter(z=>z.id!==zid);DB.plants=DB.plants.filter(p=>p.zid!==zid);DB.tasks=DB.tasks.filter(t=>t.zid!==zid);
+  saveDB();toast('Zone verwijderd');renderPage(curP);
+}
+function openZD(zid){
+  const z=DB.zones.find(x=>x.id===zid);if(!z)return;
+  document.getElementById('zdTitle').textContent=z.name;
+  const pl=DB.plants.filter(p=>p.zid===zid);
+  const ts=DB.tasks.filter(t=>t.zid===zid&&t.status!=='done');
+  document.getElementById('zdBody').innerHTML=`
+    <div style="margin-bottom:10px"><div class="fl">Planten (${pl.length})</div>
+    <div class="zdpc">
+      ${pl.map(p=>`<div class="zdp" onclick="openPD('${p.id}')">${p.em||'\uD83C\uDF31'} ${p.cn||p.n}</div>`).join('')}
+      <div class="zdp" style="background:var(--acc);color:#fff;border-color:var(--acc)" onclick="openAddPlant('${zid}')">+ Plant</div>
+    </div></div>
+    <div class="fl">Open taken (${ts.length})</div>
+    ${ts.map(t=>trHTML(t,true)).join('')||'<div style="color:var(--t3);font-size:12px">Geen open taken</div>'}
+    <button class="btn-s" style="margin-top:10px" onclick="openZSheet('${zid}');closeSheet('sZD')">Zone bewerken</button>
+    <button class="btn-d" onclick="delZone('${zid}');closeSheet('sZD')">Zone verwijderen</button>`;
+  openSheet('sZD');
+}
+
+/* ============================================================
+   PLANT FORMS
+   ============================================================ */
+let _pZ=null,_pCat='all';
+function openAddPlant(zid=null){
+  if(!DB.zones.length){toast('Maak eerst een zone aan');return;}
+  _pZ=zid;
+  const sel=document.getElementById('pZoneSel');
+  sel.innerHTML=DB.zones.map(z=>`<option value="${z.id}" ${z.id===zid?'selected':''}>${z.name}</option>`).join('');
+  document.getElementById('pSearch').value='';
+  _pCat='all';
+  document.querySelectorAll('#catChips .fchip').forEach(c=>c.classList.toggle('on',c.dataset.c==='all'));
+  filterPDB();
+  openSheet('sPlant');
+}
+function setCat(c){_pCat=c;document.querySelectorAll('#catChips .fchip').forEach(el=>el.classList.toggle('on',el.dataset.c===c));filterPDB();}
+function filterPDB(){
+  const q=document.getElementById('pSearch').value.toLowerCase();
+  let list=PDB;
+  if(_pCat!=='all')list=list.filter(p=>p.cat===_pCat);
+  if(q)list=list.filter(p=>p.n.toLowerCase().includes(q)||p.lat.toLowerCase().includes(q));
+  document.getElementById('pList').innerHTML=list.slice(0,40).map(p=>`<div class="pi" onclick="addFromPDB('${p.id}')">
+    <div class="pi-em">${p.em||'\uD83C\uDF31'}</div>
+    <div style="flex:1;min-width:0"><div class="pi-name">${p.n}</div><div class="pi-lat">${p.lat}</div></div>
+    <div class="pi-wd">\uD83D\uDCA7${p.w}d</div>
+  </div>`).join('')||'<div style="padding:12px;color:var(--t2);font-size:12px">Geen resultaten</div>';
+}
+function addFromPDB(dbid){
+  const pdb=PDB.find(p=>p.id===dbid);if(!pdb)return;
+  const zid=document.getElementById('pZoneSel').value;
+  DB.plants.push({id:uid(),zid,dbid,cn:pdb.n,n:pdb.n,lat:pdb.lat,cat:pdb.cat,sun:pdb.sun,wd:pdb.w,pm:[...(pdb.pr||[])],fm:[...(pdb.fe||[])],em:pdb.em,img:pdb.img,at:new Date().toISOString()});
+  saveDB();closeSheet('sPlant');toast(`${pdb.n} toegevoegd`);renderPage(curP);
+}
+function addCustom(){
+  const nm=document.getElementById('pCustom').value.trim();if(!nm){toast('Voer naam in');return;}
+  const zid=document.getElementById('pZoneSel').value;if(!zid){toast('Kies een zone');return;}
+  DB.plants.push({id:uid(),zid,cn:nm,n:nm,wd:7,pm:[],fm:[],at:new Date().toISOString()});
+  saveDB();closeSheet('sPlant');toast(`${nm} toegevoegd`);renderPage(curP);
+}
+
+/* ============================================================
+   PLANT DETAIL SHEET
+   ============================================================ */
+function openPD(pid){
+  const plant=DB.plants.find(p=>p.id===pid);if(!plant)return;
+  const pdb=plant.dbid?PDB.find(p=>p.id===plant.dbid):null;
+  const z=DB.zones.find(z=>z.id===plant.zid);
+  const tip=pdb?.tip||'';const bl=pdb?.bl||[];
+  const bar=Array.from({length:12},(_,i)=>{const m=i+1;const on=bl.length===2&&m>=bl[0]&&m<=bl[1];return`<div class="bmon ${on?'on':''}"></div>`;}).join('');
+  const src=imgUrl(plant,700,190);
+  document.getElementById('pdBody').innerHTML=`
+    <img class="pd-img" src="${src}" alt="${plant.cn||plant.n}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="pd-em" style="display:none">${plant.em||'\uD83C\uDF31'}</div>
+    <div class="pd-body">
+      <div class="pd-name">${plant.cn||plant.n}</div>
+      ${pdb?`<div class="pd-lat">${pdb.lat}</div>`:''}
+      ${z?`<div class="pd-zone">&#11041; ${z.name}</div>`:''}
+      <div class="pd-stats">
+        <div class="pd-stat"><div class="pd-sv">${(plant.sun||'zon').replace('halfschaduw','half')}</div><div class="pd-sl">Zon</div></div>
+        <div class="pd-stat"><div class="pd-sv">${plant.wd}d</div><div class="pd-sl">Water</div></div>
+        <div class="pd-stat"><div class="pd-sv">${plant.cat||'\u2014'}</div><div class="pd-sl">Type</div></div>
+      </div>
+      ${tip?`<div class="tip-box">&#128161; ${tip}</div>`:''}
+      ${bl.length?`<div style="margin-bottom:10px"><div class="fl">Bloeiperiode</div><div class="bloom-bar">${bar}</div><div style="display:flex;justify-content:space-between;font-size:8px;color:var(--t3);margin-top:3px">${MNL.map(m=>`<span>${m[0]}</span>`).join('')}</div></div>`:''}
+      <div class="dvdr"></div>
+      <div class="fg"><label class="fl">Waterfrequentie (dagen)</label><input class="fi" type="number" id="pd_wd" value="${plant.wd}" min="1" max="60"></div>
+      <div class="fg"><label class="fl">Snoeimaanden</label><div class="mog" id="pd_pm">${moBtns(plant.pm)}</div></div>
+      <div class="fg"><label class="fl">Bemestmaanden</label><div class="mog" id="pd_fm">${moBtns(plant.fm)}</div></div>
+      <button class="btn-p" onclick="savePD('${pid}')">Opslaan</button>
+      <button class="btn-d" onclick="delPlant('${pid}')">Plant verwijderen</button>
+    </div>`;
+  openSheet('sPD');
+}
+function moBtns(sel){return MNL.map((m,i)=>{const n=i+1;return`<button class="mob ${sel.includes(n)?'on':''}" data-m="${n}" onclick="this.classList.toggle('on')">${m}</button>`;}).join('');}
+function savePD(pid){
+  const plant=DB.plants.find(p=>p.id===pid);if(!plant)return;
+  plant.wd=parseInt(document.getElementById('pd_wd').value)||7;
+  plant.pm=[...document.querySelectorAll('#pd_pm .mob.on')].map(b=>parseInt(b.dataset.m));
+  plant.fm=[...document.querySelectorAll('#pd_fm .mob.on')].map(b=>parseInt(b.dataset.m));
+  saveDB();closeSheet('sPD');toast('Plant opgeslagen');
+}
+function delPlant(pid){
+  if(!confirm('Plant verwijderen?'))return;
+  DB.plants=DB.plants.filter(p=>p.id!==pid);DB.tasks=DB.tasks.filter(t=>t.pid!==pid);
+  saveDB();closeSheet('sPD');toast('Plant verwijderd');renderPage(curP);
+}
+
+/* ============================================================
+   TASK FORMS
+   ============================================================ */
+let _tType='water',_tPrio='normal',_tPid=null;
+function openTaskSheet(pid=null){
+  _tPid=pid;_tType='water';_tPrio='normal';
+  document.getElementById('tName').value='';
+  document.getElementById('tDue').value=today();
+  document.querySelectorAll('#typeGrid .tb').forEach(b=>b.classList.toggle('on',b.dataset.t==='water'));
+  document.querySelectorAll('.seg-b').forEach(b=>b.classList.toggle('on',b.dataset.p==='normal'));
+  const tz=document.getElementById('tZone');
+  tz.innerHTML='<option value="">\u2014 Geen \u2014</option>'+DB.zones.map(z=>`<option value="${z.id}">${z.name}</option>`).join('');
+  openSheet('sTask');
+}
+function openTaskForPlant(pid){openTaskSheet(pid);}
+function setTT(t){_tType=t;document.querySelectorAll('#typeGrid .tb').forEach(b=>b.classList.toggle('on',b.dataset.t===t));}
+function setTP(p){_tPrio=p;document.querySelectorAll('.seg-b').forEach(b=>b.classList.toggle('on',b.dataset.p===p));}
+function saveTask(){
+  const nm=document.getElementById('tName').value.trim();if(!nm){toast('Voer naam in');return;}
+  const due=document.getElementById('tDue').value||today();
+  const zid=document.getElementById('tZone').value||null;
+  DB.tasks.push({id:uid(),status:'open',type:_tType,title:nm,due,prio:_tPrio,zid,pid:_tPid,rec:false,at:new Date().toISOString()});
+  saveDB();closeSheet('sTask');toast('Taak aangemaakt');renderPage(curP);
+}
+
+/* ============================================================
+   EXPORT / IMPORT
+   ============================================================ */
+function exportICS(){
+  const tasks=DB.tasks.filter(t=>t.status!=='done');
+  if(!tasks.length){toast('Geen taken');return;}
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MijnTuin//NL','CALSCALE:GREGORIAN'];
+  tasks.forEach(t=>{
+    const sd=t.due.replace(/-/g,'');const ed=addDays(t.due,1).replace(/-/g,'');
+    lines.push('BEGIN:VEVENT','UID:'+t.id+'@mt','DTSTART;VALUE=DATE:'+sd,'DTEND;VALUE=DATE:'+ed,'SUMMARY:'+t.title,'STATUS:CONFIRMED');
+    if(t.rec&&t.rd)lines.push('RRULE:FREQ=DAILY;INTERVAL='+t.rd);
+    lines.push('BEGIN:VALARM','TRIGGER:-PT8H','ACTION:DISPLAY','DESCRIPTION:'+t.title,'END:VALARM','END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\r\n')],{type:'text/calendar'}));a.download='MijnTuin.ics';a.click();
+  toast(`${tasks.length} taken geëxporteerd`);
+}
+function expJSON(){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}));a.download='MijnTuin-backup.json';a.click();toast('Backup geëxporteerd');
+}
+function impJSON(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{Object.assign(DB,JSON.parse(ev.target.result));saveDB();toast('Hersteld');renderPage(curP);}catch(e){toast('Ongeldig bestand');}};r.readAsText(f);};
+  inp.click();
+}
+function clearDone(){const n=DB.tasks.filter(t=>t.status==='done').length;if(!n){toast('Niets te wissen');return;}if(!confirm(`${n} taken wissen?`))return;DB.tasks=DB.tasks.filter(t=>t.status!=='done');saveDB();toast('Gewist');renderPage(curP);}
+function clearAll(){if(!confirm('Alles wissen?'))return;DB={zones:[],plants:[],tasks:[],log:[]};saveDB();toast('Gewist');renderPage(curP);}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+window.addEventListener('DOMContentLoaded',()=>{
+  loadDB();
+  if(localStorage.getItem('mt_theme')==='lm')applyTheme(true);
+  initCC();initPlan();
+  document.getElementById('tDue').value=today();
+  const cw=localStorage.getItem('mt_wx');
+  if(cw){try{const o=JSON.parse(cw);if(Date.now()-o.ts<3.6e6){WX=o.d;applyWxUI();}}catch(e){}}
+  fetchWx();
+  renderVandaag();
+});
+</script>
+</body>
+</html>
