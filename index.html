@@ -6,843 +6,669 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" id="themeColor" content="#0a0a0a">
+<meta name="theme-color" id="themeColor" content="#ffffff">
 <title>MijnTuin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* =====================================================
-   DESIGN SYSTEM: Uber-precision x Facebook-warmth
-   Dark mode default, light mode optional
-   ===================================================== */
+/* =========================================================
+   DESIGN TOKENS — Minimalistisch, modern, licht-first
+   ========================================================= */
 :root{
-  /* Uber-zwart fundament */
-  --bg:#0a0a0a;
-  --bg1:#141414;
-  --bg2:#1c1c1c;
-  --bg3:#242424;
-  --bg4:#2e2e2e;
-  /* Borders */
-  --bor:rgba(255,255,255,.08);
-  --bor2:rgba(255,255,255,.13);
-  --bor3:rgba(255,255,255,.2);
-  /* Surfaces */
-  --sur:rgba(255,255,255,.04);
-  --sur2:rgba(255,255,255,.07);
-  --sur3:rgba(255,255,255,.11);
-  /* Text — Inter bold hierarchy */
-  --t0:#ffffff;
-  --t1:#e4e4e4;
-  --t2:#a0a0a0;
-  --t3:#606060;
-  --t4:#383838;
-  /* Accent — Facebook-inspired blue + groen */
-  --acc:#06c167; /* Uber groen */
-  --acc2:#05a558;
-  --accl:#1db954;
-  --acll:#4ade80;
-  --blue:#1877f2; /* Facebook blauw */
-  --blue2:#166fe5;
-  --bluel:#4293f5;
-  /* Task kleuren */
-  --cw:#3b82f6;--cs:#8b5cf6;--cf:#f59e0b;--cm:#10b981;--ck:#a3714a;--cb2:#ef4444;--cov:#84cc16;
-  --danger:#ef4444;--warn:#f59e0b;
-  /* Radii */
-  --r:12px;--r2:16px;--r3:20px;--rs:8px;
-  /* Safe areas */
-  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --bg:#ffffff;
+  --bg1:#f8f8f8;
+  --bg2:#f2f2f2;
+  --bg3:#e8e8e8;
+  --bor:rgba(0,0,0,.08);
+  --bor2:rgba(0,0,0,.14);
+  --t0:#111111;
+  --t1:#333333;
+  --t2:#666666;
+  --t3:#999999;
+  --acc:#1a7a3e;
+  --accl:#22a854;
+  --acc-bg:rgba(26,122,62,.08);
+  --cw:#2563eb;--cs:#7c3aed;--cf:#d97706;--cm:#059669;
+  --ck:#92400e;--cb2:#dc2626;--cov:#65a30d;
+  --danger:#dc2626;--warn:#d97706;
+  --r:12px;--rs:8px;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
 }
-html.lm{
-  --bg:#f0f2f5; /* Facebook licht grijs */
-  --bg1:#ffffff;
-  --bg2:#f7f8fa;
-  --bg3:#ebedf0;
-  --bg4:#dfe1e5;
-  --bor:rgba(0,0,0,.1);--bor2:rgba(0,0,0,.15);--bor3:rgba(0,0,0,.22);
-  --sur:rgba(0,0,0,.03);--sur2:rgba(0,0,0,.055);--sur3:rgba(0,0,0,.09);
-  --t0:#050505;--t1:#1c1e21;--t2:#606770;--t3:#8a8d91;--t4:#bec3c9;
-  --acc:#06c167;--acc2:#05a558;--accl:#059950;--acll:#06c167;
+html.donker{
+  --bg:#111111;--bg1:#1a1a1a;--bg2:#222222;--bg3:#2a2a2a;
+  --bor:rgba(255,255,255,.08);--bor2:rgba(255,255,255,.14);
+  --t0:#f5f5f5;--t1:#d4d4d4;--t2:#8a8a8a;--t3:#555555;
+  --acc:#22a854;--accl:#4ade80;--acc-bg:rgba(34,168,84,.1);
 }
 
+/* =========================================================
+   BASIS
+   ========================================================= */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t0);font-family:'Inter',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t0);font-family:'Inter',sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
 button{background:none;border:none;cursor:pointer;font-family:inherit;color:inherit}
-input,select,textarea{font-family:'Inter',sans-serif;color:var(--t0);background:var(--bg2)}
+input,select{font-family:'Inter',sans-serif;color:var(--t0);background:var(--bg2)}
 
-/* ======== LAYOUT ======== */
+/* =========================================================
+   LAYOUT
+   ========================================================= */
 #wrap{
   position:fixed;inset:0;
-  padding-top:calc(58px + var(--st));
-  padding-bottom:calc(60px + var(--sb));
+  padding-top:calc(56px + var(--st));
+  padding-bottom:calc(58px + var(--sb));
   overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   background:var(--bg);
 }
-.page{display:none;animation:pgIn .18s cubic-bezier(.4,0,.2,1) both}
-.page.active{display:block}
-@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pagina{display:none;padding-bottom:8px}
+.pagina.actief{display:block}
 
-/* ======== HEADER — Uber style: zwart, clean, groot logo ======== */
+/* =========================================================
+   HEADER — wit, clean, miniem
+   ========================================================= */
 #hdr{
-  position:fixed;top:0;left:0;right:0;z-index:300;
-  height:calc(58px + var(--st));
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(56px + var(--st));
   padding-top:var(--st);
-  background:rgba(10,10,10,.96);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:var(--bg);
   border-bottom:1px solid var(--bor);
   display:flex;align-items:center;
-  padding-left:16px;padding-right:12px;gap:10px;
+  padding-left:18px;padding-right:14px;gap:10px;
 }
-html.lm #hdr{background:rgba(255,255,255,.97);border-color:var(--bor)}
-.hdr-logo{
-  display:flex;align-items:center;gap:8px;flex:1;
-}
-.hdr-logo-mark{
-  width:32px;height:32px;border-radius:8px;
-  background:var(--acc);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:900;color:#000;letter-spacing:-.04em;
-  flex-shrink:0;
-}
-.hdr-logo-text{
-  font-size:18px;font-weight:800;color:var(--t0);
-  letter-spacing:-.04em;line-height:1;
-}
-.hdr-logo-text span{color:var(--acc);font-weight:900}
-/* Weather pill — Uber style: white on black pill */
-.wx-pill{
+.hdr-naam{font-size:17px;font-weight:600;color:var(--t0);letter-spacing:-.02em;flex:1}
+.hdr-naam span{color:var(--acc)}
+.hdr-wx-pill{
   display:flex;align-items:center;gap:5px;
   padding:5px 10px;border-radius:20px;
-  background:var(--bg2);border:1px solid var(--bor2);
-  cursor:pointer;transition:background .15s;
+  background:var(--bg2);border:1px solid var(--bor);
+  cursor:pointer;font-size:12px;
 }
-.wx-pill:active{background:var(--bg3)}
-.wx-ico{font-size:14px}.wx-temp{font-size:12px;font-weight:700;color:var(--t0)}.wx-rain{font-size:10px;color:var(--cw);font-weight:700}
-.hdr-icon-btn{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--sur2);border:1px solid var(--bor);
+.hdr-knop{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--bor);
   display:flex;align-items:center;justify-content:center;
-  font-size:15px;color:var(--t2);transition:background .15s;
+  font-size:14px;color:var(--t2);
 }
-.hdr-icon-btn:active{background:var(--sur3)}
 
-/* ======== BOTTOM NAV — Facebook Tab Bar style ======== */
+/* =========================================================
+   NAVIGATIE ONDERAAN
+   ========================================================= */
 #nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:300;
-  height:calc(60px + var(--sb));
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(58px + var(--sb));
   padding-bottom:var(--sb);
-  background:rgba(10,10,10,.97);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:var(--bg);
   border-top:1px solid var(--bor);
   display:flex;
 }
-html.lm #nav{background:rgba(255,255,255,.97)}
 .nb{
   flex:1;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:3px;padding-top:6px;
   color:var(--t3);position:relative;min-height:44px;
-  transition:color .12s;
-}
-.nb.on{color:var(--acc)}
-.nb-i{font-size:20px;line-height:1;transition:transform .15s}
-.nb.on .nb-i{transform:translateY(-1px)}
-.nb-l{font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:color .12s}
-/* Active indicator — Uber: no underline, just color shift + micro bounce */
-.nb-badge{position:absolute;top:6px;right:calc(50% - 14px);min-width:16px;height:16px;background:var(--danger);border-radius:8px;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 4px;display:none}
-.nb-badge.show{display:flex}
-
-/* ======== FAB — Uber: black with white + ======== */
-#fab{
-  position:fixed;right:16px;bottom:calc(68px + var(--sb));z-index:200;
-  width:52px;height:52px;border-radius:50%;
-  background:var(--acc);
-  color:#000;font-size:24px;font-weight:300;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 24px rgba(6,193,103,.4);
-  border:none;transition:transform .12s,box-shadow .12s;
-}
-#fab:active{transform:scale(.9);box-shadow:0 2px 12px rgba(6,193,103,.3)}
-
-/* ======== FACEBOOK-STYLE FEED CARDS ======== */
-.feed-card{
-  background:var(--bg1);
-  border-top:1px solid var(--bor);
-  border-bottom:1px solid var(--bor);
-  margin-bottom:8px;
-  overflow:hidden;
-}
-/* On light mode, cards have shadow like FB */
-html.lm .feed-card{
-  border-radius:var(--r);
-  border:1px solid var(--bor);
-  box-shadow:0 1px 3px rgba(0,0,0,.1);
-  margin:0 0 8px;
-}
-.feed-card-hdr{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 14px 10px;
-}
-.feed-avatar{
-  width:40px;height:40px;min-width:40px;border-radius:50%;
-  overflow:hidden;background:var(--bg3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;border:2px solid var(--bor2);
-}
-.feed-avatar img{width:100%;height:100%;object-fit:cover}
-.feed-card-info{flex:1;min-width:0}
-.feed-card-name{font-size:14px;font-weight:700;color:var(--t0);line-height:1.2}
-.feed-card-meta{font-size:12px;color:var(--t2);margin-top:1px}
-.feed-card-more{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t2)}
-/* Photo area */
-.feed-img-wrap{position:relative;width:100%;overflow:hidden}
-.feed-img{width:100%;height:200px;object-fit:cover;display:block;background:var(--bg3);transition:opacity .3s}
-.feed-img.hidden{opacity:0}
-.feed-img.show{opacity:1}
-.feed-img-em{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:72px;background:var(--bg3)}
-/* Gradient overlay on photo */
-.feed-img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 50%)}
-.feed-img-badge{
-  position:absolute;top:10px;left:10px;
-  background:rgba(0,0,0,.65);backdrop-filter:blur(8px);
-  padding:4px 10px;border-radius:20px;
-  font-size:11px;font-weight:700;color:#fff;
-}
-.feed-img-top-right{position:absolute;top:10px;right:10px;display:flex;gap:6px}
-.feed-img-btn{
-  width:32px;height:32px;border-radius:50%;
-  background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.2);
-}
-/* Task chips as FB reactions */
-.feed-reactions{
-  padding:10px 14px 12px;
-  display:flex;flex-wrap:wrap;gap:6px;
-  border-top:1px solid var(--bor);
-}
-.feed-rxn{
-  display:flex;align-items:center;gap:5px;
-  padding:5px 11px;border-radius:20px;
-  font-size:11px;font-weight:600;
-  border:1px solid var(--bor2);
-  background:var(--bg2);
-  cursor:pointer;transition:all .12s;
-  color:var(--t1);
-}
-.feed-rxn:active{transform:scale(.94)}
-.feed-rxn.water{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
-.feed-rxn.snoei{background:rgba(139,92,246,.15);color:#a78bfa;border-color:rgba(139,92,246,.3)}
-.feed-rxn.bemest{background:rgba(245,158,11,.15);color:#fbbf24;border-color:rgba(245,158,11,.3)}
-.feed-rxn.maai{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.3)}
-.feed-rxn.overig{background:var(--sur2);color:var(--t2)}
-.feed-rxn.rain{background:rgba(59,130,246,.06);color:var(--t3);text-decoration:line-through}
-.feed-rxn.done{opacity:.45;text-decoration:line-through}
-
-/* ======== WEATHER BANNERS — Uber notification style ======== */
-.wxb{
-  margin:8px 14px;padding:12px 14px;
-  border-radius:var(--r2);
-  display:flex;align-items:flex-start;gap:12px;
-}
-.wxb.rain{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25)}
-.wxb.frost{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22)}
-.wxb.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22)}
-.wxb-ico{font-size:24px;line-height:1}
-.wxb-body{flex:1}
-.wxb-title{font-size:13px;font-weight:700;color:var(--t0);letter-spacing:-.01em}
-.wxb-sub{font-size:11px;color:var(--t2);margin-top:2px;line-height:1.5}
-.wxb-btn{
-  align-self:center;font-size:11px;font-weight:700;
-  padding:7px 13px;border-radius:20px;
-  background:var(--blue);color:#fff;
-  border:none;cursor:pointer;white-space:nowrap;
-}
-
-/* ======== STAT ROW — Uber: big numbers, clean ======== */
-.stat-row{
-  display:flex;gap:0;
-  padding:16px 14px 0;
-}
-.stat-item{
-  flex:1;text-align:center;
-  padding:12px 4px;
-  border-right:1px solid var(--bor);
-}
-.stat-item:last-child{border-right:none}
-.stat-num{
-  font-size:28px;font-weight:900;
-  color:var(--t0);letter-spacing:-.04em;line-height:1;
-}
-.stat-num.green{color:var(--acc)}
-.stat-lbl{
-  font-size:10px;font-weight:600;
-  color:var(--t3);margin-top:3px;
+  transition:color .15s;font-size:9px;font-weight:600;
   letter-spacing:.04em;text-transform:uppercase;
 }
+.nb.on{color:var(--acc)}
+.nb-i{font-size:20px;line-height:1}
+.nb::after{
+  content:'';position:absolute;top:0;left:50%;
+  transform:translateX(-50%);
+  width:0;height:2px;background:var(--acc);
+  transition:width .2s;border-radius:0 0 2px 2px;
+}
+.nb.on::after{width:20px}
 
-/* ======== GREETING — Uber: big, bold ======== */
-.greeting{padding:20px 14px 0}
-.greeting-top{display:flex;align-items:center;justify-content:space-between}
-.greeting-txt{font-size:24px;font-weight:800;color:var(--t0);letter-spacing:-.04em;line-height:1.1}
-.greeting-date{font-size:12px;color:var(--t2);margin-top:4px;font-weight:500}
-.greeting-avatar{
-  width:42px;height:42px;border-radius:50%;
-  background:linear-gradient(135deg,var(--acc),var(--blue));
+/* =========================================================
+   FAB
+   ========================================================= */
+#fab{
+  position:fixed;right:18px;bottom:calc(66px + var(--sb));z-index:150;
+  width:48px;height:48px;border-radius:50%;
+  background:var(--acc);color:#fff;font-size:22px;
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;color:#fff;font-weight:800;
-  flex-shrink:0;
+  box-shadow:0 2px 12px rgba(26,122,62,.3);
+  border:none;transition:transform .12s;
 }
+#fab:active{transform:scale(.92)}
 
-/* ======== PROGRESS — Uber ride progress ======== */
-.prog-wrap{margin:12px 14px 0}
-.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
-.prog-lbl{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.04em;text-transform:uppercase}
-.prog-pct{font-size:18px;font-weight:900;color:var(--acc);letter-spacing:-.04em}
-.prog-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acll));border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
-
-/* ======== OVERDUE BANNER ======== */
-.od-banner{
-  margin:10px 14px 0;
-  background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);
-  border-radius:var(--r);padding:10px 14px;
-  display:flex;align-items:center;gap:10px;cursor:pointer;
-}
-.od-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);animation:pulse 1.5s ease infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
-.od-txt{font-size:13px;font-weight:700;color:var(--danger);flex:1;letter-spacing:-.01em}
-.od-arr{font-size:16px;color:var(--danger)}
-
-/* ======== SECTION HEADERS — FB style ======== */
-.sec-hdr{
+/* =========================================================
+   KALENDER PAGINA
+   ========================================================= */
+.kal-nav{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 14px 8px;
+  padding:16px 18px 10px;
 }
-.sec-title{font-size:17px;font-weight:800;color:var(--t0);letter-spacing:-.03em}
-.sec-link{
-  font-size:13px;font-weight:700;color:var(--blue);
-  padding:5px 12px;border-radius:6px;background:rgba(24,119,242,.1);
+.kal-maand{font-size:18px;font-weight:600;color:var(--t0);letter-spacing:-.02em}
+.kal-nav-knoppen{display:flex;gap:6px}
+.kal-nav-btn{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--bor);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--t1);
 }
-.sec{padding:0 14px}
+.kal-nav-btn:active{background:var(--bg3)}
 
-/* ======== TASK ROW — Uber clean list ======== */
-.tr{
-  background:var(--bg1);
-  border-radius:var(--r);
-  padding:11px 12px;margin-bottom:6px;
-  display:flex;align-items:center;gap:10px;
-  border-left:3px solid var(--bor2);
-  transition:transform .1s;
+/* Weekdagen header */
+.kal-dow{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  padding:0 12px;margin-bottom:4px;
 }
-.tr:active{transform:scale(.99)}
-.tr.tw{border-left-color:var(--cw)}.tr.ts{border-left-color:var(--cs)}.tr.tf{border-left-color:var(--cf)}.tr.tm{border-left-color:var(--cm)}.tr.tk{border-left-color:var(--ck)}.tr.tb{border-left-color:var(--cb2)}.tr.tv{border-left-color:var(--cov)}.tr.to{border-left-color:var(--t4)}
+.kal-dow-cel{
+  text-align:center;font-size:11px;font-weight:600;
+  color:var(--t3);padding:4px 0;letter-spacing:.04em;
+}
+
+/* Dag raster */
+.kal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:2px;padding:0 12px;
+}
+.kd{
+  min-height:46px;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;
+  padding:5px 2px;cursor:pointer;transition:background .1s;
+}
+.kd:active{background:var(--bg2)}
+.kd-leeg{pointer-events:none}
+.kd-num{
+  font-size:13px;font-weight:500;color:var(--t1);
+  width:26px;height:26px;display:flex;align-items:center;
+  justify-content:center;border-radius:50%;
+}
+.kd-vandaag .kd-num{background:var(--acc);color:#fff;font-weight:600}
+.kd-sel{background:var(--acc-bg)}
+.kd-sel .kd-num{color:var(--acc);font-weight:600}
+.kd-stippen{display:flex;gap:2px;justify-content:center;margin-top:2px;flex-wrap:wrap;max-width:22px}
+.kd-stip{width:5px;height:5px;border-radius:50%}
+
+/* Geselecteerde dag sectie */
+.kal-dag-kop{
+  font-size:13px;font-weight:600;color:var(--t2);
+  padding:14px 18px 8px;letter-spacing:.01em;
+}
+.kal-taak-rij{
+  display:flex;align-items:center;gap:0;
+  margin:0 14px 6px;
+  background:var(--bg1);border-radius:var(--r);
+  overflow:hidden;border:1px solid var(--bor);
+}
+.kal-taak-balk{width:3px;align-self:stretch;flex-shrink:0}
+.kt-chk{
+  width:38px;height:38px;min-width:38px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:13px;font-weight:700;
+  color:var(--acc);border-right:1px solid var(--bor);
+}
+.kt-chk-aan{color:var(--acc);background:var(--acc-bg)}
+.kal-taak-rij.gedaan .kt-naam{text-decoration:line-through;color:var(--t3)}
+.kt-inf{padding:8px 12px;flex:1;min-width:0}
+.kt-naam{font-size:13px;font-weight:500;color:var(--t0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kt-meta{font-size:11px;color:var(--t2);margin-top:2px}
+.leeg-dag{padding:12px 18px;font-size:13px;color:var(--t3)}
+
+/* Weersstrook */
+.wx-strook{
+  display:flex;gap:5px;overflow-x:auto;
+  padding:8px 14px 0;margin-bottom:4px;
+  scrollbar-width:none;
+}
+.wx-strook::-webkit-scrollbar{display:none}
+.wx-p{
+  padding:5px 10px;border-radius:20px;font-size:11px;
+  font-weight:500;background:var(--bg2);border:1px solid var(--bor);
+  white-space:nowrap;color:var(--t2);flex-shrink:0;
+}
+.wx-p-regen{background:rgba(37,99,235,.08);color:#2563eb;border-color:rgba(37,99,235,.2)}
+
+/* Weer banners */
+.wxb{
+  margin:8px 14px;padding:10px 14px;border-radius:var(--r);
+  display:flex;align-items:center;gap:10px;
+}
+.wxb-regen{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18)}
+.wxb-vorst{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.18)}
+.wxb-ico{font-size:18px}
+.wxb-body{flex:1}
+.wxb-titel{font-size:13px;font-weight:600;color:var(--t0)}
+.wxb-sub{font-size:11px;color:var(--t2);margin-top:1px}
+.wxb-knop{
+  font-size:11px;font-weight:600;padding:6px 12px;
+  border-radius:20px;background:var(--cw);color:#fff;border:none;cursor:pointer;
+}
+
+/* =========================================================
+   TAKEN PAGINA
+   ========================================================= */
+.filter-balk{
+  display:flex;gap:6px;overflow-x:auto;
+  padding:12px 14px 2px;scrollbar-width:none;
+}
+.filter-balk::-webkit-scrollbar{display:none}
+.filter-knop{
+  padding:6px 16px;border-radius:20px;font-size:12px;
+  font-weight:600;border:1px solid var(--bor2);
+  color:var(--t2);background:var(--bg);
+  white-space:nowrap;transition:all .15s;
+}
+.filter-knop.actief{background:var(--t0);color:var(--bg);border-color:var(--t0)}
+.filter-knop:active{transform:scale(.96)}
+
+.taken-sec{padding:10px 14px 0}
+.taak-rij{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;margin-bottom:6px;
+  background:var(--bg1);border-radius:var(--r);
+  border:1px solid var(--bor);
+  border-left:3px solid var(--bor2);
+}
+.taak-rij.tw{border-left-color:var(--cw)}.taak-rij.ts{border-left-color:var(--cs)}.taak-rij.tf{border-left-color:var(--cf)}.taak-rij.tm{border-left-color:var(--cm)}.taak-rij.tk{border-left-color:var(--ck)}.taak-rij.tb{border-left-color:var(--cb2)}.taak-rij.tv{border-left-color:var(--cov)}.taak-rij.to{border-left-color:var(--t3)}
 .chk{
   width:22px;height:22px;min-width:22px;border-radius:50%;
-  border:2px solid var(--bor3);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:10px;font-weight:800;color:transparent;
-  transition:all .15s;
+  border:1.5px solid var(--bor2);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:11px;
+  font-weight:700;color:transparent;transition:all .15s;
 }
 .chk:active{transform:scale(.85)}
-.chk.done{background:var(--acc);border-color:var(--acc);color:#000}
+.chk.chk-aan{background:var(--acc);border-color:var(--acc);color:#fff}
 .tr-inf{flex:1;min-width:0}
-.tr-ttl{font-size:13px;font-weight:600;color:var(--t0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
-.tr-meta{font-size:11px;color:var(--t2);margin-top:1px}
-.tr-acts{display:flex;gap:3px}
-.tr-act{width:28px;height:28px;border-radius:50%;background:var(--sur2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t2);transition:background .12s}
-.tr-act:active{background:var(--sur3)}
-.bdg{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:5px;letter-spacing:.04em}
-.bw{background:rgba(59,130,246,.2);color:var(--cw)}.bs{background:rgba(139,92,246,.2);color:var(--cs)}.bf{background:rgba(245,158,11,.2);color:var(--cf)}.bm{background:rgba(16,185,129,.2);color:var(--cm)}.bk{background:rgba(163,113,74,.2);color:var(--ck)}.bb{background:rgba(239,68,68,.2);color:var(--cb2)}.bv{background:rgba(132,204,22,.2);color:var(--cov)}.bo{background:var(--sur2);color:var(--t3)}
-.late{font-size:9px;color:var(--danger);font-weight:800}
-
-/* ======== ZONE CARDS — FB card style ======== */
-.zcard{
-  background:var(--bg1);
-  border-top:1px solid var(--bor);border-bottom:1px solid var(--bor);
-  padding:14px;margin-bottom:8px;
-  cursor:pointer;position:relative;
-  transition:background .12s;
+.tr-naam{font-size:13px;font-weight:500;color:var(--t0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-naam.doorgestreept{text-decoration:line-through;color:var(--t3)}
+.tr-sub{font-size:11px;color:var(--t2);margin-top:2px}
+.laat-tag{font-size:10px;font-weight:700;color:var(--danger)}
+.tr-act{
+  font-size:11px;font-weight:600;padding:4px 10px;
+  border-radius:20px;background:var(--bg2);border:1px solid var(--bor2);
+  color:var(--t2);white-space:nowrap;
 }
-html.lm .zcard{border-radius:var(--r);border:1px solid var(--bor);margin:0 0 8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.zcard:active{background:var(--bg2)}
-.zcard-accent{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:2px 0 0 2px}
-.zc-body{padding-left:12px}
-.zc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-.zc-name{font-size:16px;font-weight:800;color:var(--t0);letter-spacing:-.03em}
-.zc-cnt{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--acc);color:#000;white-space:nowrap}
-.zc-cnt.zero{background:var(--sur2);color:var(--t3)}
-.zc-meta{font-size:12px;color:var(--t2);margin-top:3px}
-.zc-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
-.zc-chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--sur2);color:var(--t1);font-weight:500}
-.zc-foot{display:flex;gap:6px;margin-top:10px}
-.zc-btn{
-  padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;
-  background:var(--sur2);color:var(--t1);border:1px solid var(--bor2);
-  transition:background .12s;
-}
-.zc-btn:active{background:var(--sur3)}
-.zc-btn.del{color:var(--danger);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+.leeg-state{padding:32px;text-align:center;font-size:13px;color:var(--t3)}
 
-/* ======== FILTER CHIPS — Uber pill style ======== */
-.fchips{display:flex;gap:8px;overflow-x:auto;padding:0 14px 2px;margin-bottom:10px;scrollbar-width:none}
-.fchips::-webkit-scrollbar{display:none}
-.fchip{
-  padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;
-  border:1.5px solid var(--bor2);color:var(--t2);background:var(--bg2);
-  white-space:nowrap;transition:all .15s;letter-spacing:.01em;
-  flex-shrink:0;
+/* =========================================================
+   ZONES PAGINA
+   ========================================================= */
+.zones-sec{padding:12px 14px 0}
+.zone-kaart{
+  background:var(--bg1);border:1px solid var(--bor);
+  border-radius:var(--r);padding:14px;margin-bottom:8px;
+  cursor:pointer;position:relative;overflow:hidden;
 }
-.fchip.on{background:var(--t0);color:var(--bg);border-color:var(--t0)}
-html.lm .fchip.on{background:var(--bg);color:var(--t0)}
-.fchip:active{transform:scale(.95)}
-
-/* ======== PLANNING CALENDAR — Uber map grid precision ======== */
-.plan-hdr{
-  padding:14px 14px 10px;
-  display:flex;align-items:center;justify-content:space-between;
+.zone-kaart::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--acc);
 }
-.plan-mo{font-size:20px;font-weight:800;color:var(--t0);letter-spacing:-.04em}
-.plan-nav{display:flex;gap:6px}
-.plan-nb{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--bg2);border:1px solid var(--bor2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;color:var(--t1);
+.zk-naam{font-size:15px;font-weight:600;color:var(--t0);padding-left:10px;letter-spacing:-.01em}
+.zk-info{font-size:12px;color:var(--t2);margin-top:3px;padding-left:10px}
+.zk-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-left:10px}
+.zk-chip{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--bg2);color:var(--t2);border:1px solid var(--bor)}
+.zk-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-left:10px}
+.zk-taken-label{font-size:11px;font-weight:600;color:var(--acc)}
+.zk-knoppen{display:flex;gap:5px}
+.zk-btn{font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;background:var(--bg2);border:1px solid var(--bor2);color:var(--t1)}
+.zk-btn:active{background:var(--bg3)}
+.zk-btn-del{color:var(--danger);border-color:rgba(220,38,38,.25);background:rgba(220,38,38,.05)}
+.leeg-zones{text-align:center;padding:48px 24px;color:var(--t3);font-size:14px;line-height:1.6}
+
+/* =========================================================
+   PLANTEN PAGINA
+   ========================================================= */
+.planten-sec{padding:0 14px}
+.plant-kaart{
+  background:var(--bg1);border:1px solid var(--bor);
+  border-radius:var(--r);margin-bottom:8px;overflow:hidden;
+  cursor:pointer;
 }
-.plan-nb:active{background:var(--bg3)}
-
-/* Weather strip */
-.wx-strip{display:flex;gap:5px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
-.wx-strip::-webkit-scrollbar{display:none}
-.wx-dp{
-  padding:6px 10px;border-radius:20px;font-size:10px;font-weight:700;
-  border:1px solid var(--bor);background:var(--bg2);color:var(--t2);
-  white-space:nowrap;flex-shrink:0;
+.plant-foto{width:100%;height:140px;object-fit:cover;background:var(--bg2);display:block;opacity:0;transition:opacity .3s}
+.plant-foto.geladen{opacity:1}
+.plant-foto-em{width:100%;height:140px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:56px}
+.plant-info{padding:12px 14px}
+.plant-naam{font-size:14px;font-weight:600;color:var(--t0);letter-spacing:-.01em}
+.plant-lat{font-size:11px;color:var(--t2);font-style:italic;margin-top:2px}
+.plant-zone{font-size:11px;color:var(--acc);font-weight:500;margin-top:2px}
+.plant-taken-chips{display:flex;flex-wrap:wrap;gap:5px;padding:8px 14px;border-top:1px solid var(--bor)}
+.plant-taak-chip{
+  font-size:10px;font-weight:600;padding:3px 9px;
+  border-radius:20px;cursor:pointer;border:1px solid transparent;
 }
-.wx-dp.rain{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
-.wx-dp.frost{background:rgba(239,68,68,.12);color:#f87171;border-color:rgba(239,68,68,.3)}
+.ptw{background:rgba(37,99,235,.08);color:var(--cw);border-color:rgba(37,99,235,.2)}
+.pts{background:rgba(124,58,237,.08);color:var(--cs);border-color:rgba(124,58,237,.2)}
+.ptf{background:rgba(217,119,6,.08);color:var(--cf);border-color:rgba(217,119,6,.2)}
+.ptm{background:rgba(5,150,105,.08);color:var(--cm);border-color:rgba(5,150,105,.2)}
+.pto{background:var(--bg2);color:var(--t2)}
+.leeg-planten{text-align:center;padding:48px 24px;color:var(--t3);font-size:14px;line-height:1.6}
 
-/* Plant calendar card */
-.pcc{
-  margin:0 14px 10px;background:var(--bg1);
-  border-radius:var(--r2);overflow:hidden;
-  border:1px solid var(--bor);
+/* =========================================================
+   MEER PAGINA
+   ========================================================= */
+.meer-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:14px 14px 0}
+.stat-cel{background:var(--bg1);border:1px solid var(--bor);border-radius:var(--r);padding:14px;text-align:center}
+.stat-n{font-size:32px;font-weight:600;color:var(--t0);letter-spacing:-.04em;line-height:1}
+.stat-l{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.meer-sectie{margin:14px 14px 0;background:var(--bg1);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden}
+.meer-sectie-kop{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;padding:12px 14px 6px}
+.meer-knop{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;font-size:13px;font-weight:500;
+  color:var(--t1);width:100%;text-align:left;
+  border-top:1px solid var(--bor);transition:background .12s;
 }
-html.lm .pcc{box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.pcc-hdr{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--bor);cursor:pointer}
-.pcc-thumb{width:40px;height:40px;min-width:40px;border-radius:50%;object-fit:cover;background:var(--bg3);border:2px solid var(--bor2)}
-.pcc-thumb-em{width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid var(--bor2)}
-.pcc-info{flex:1;min-width:0}
-.pcc-name{font-size:14px;font-weight:700;color:var(--t0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.02em}
-.pcc-zone{font-size:11px;color:var(--t2)}
-.pcc-cnt{font-size:11px;font-weight:800;padding:3px 9px;border-radius:12px;background:var(--acc);color:#000}
-.pcc-cnt.zero{background:var(--sur2);color:var(--t3)}
-.pcc-arr{font-size:12px;color:var(--t3);margin-left:4px;transition:transform .2s}
-.pcc-arr.open{transform:rotate(90deg)}
+.meer-knop:first-of-type{border-top:none}
+.meer-knop:active{background:var(--bg2)}
+.meer-knop.rood{color:var(--danger)}
+.gevaar-zone{margin:14px 14px 0;background:rgba(220,38,38,.04);border:1px solid rgba(220,38,38,.14);border-radius:var(--r);overflow:hidden}
+.gevaar-zone .meer-sectie-kop{color:var(--danger)}
+.app-footer{text-align:center;padding:20px;font-size:11px;color:var(--t3)}
 
-/* Calendar grid */
-.pcc-cal{padding:10px 12px 11px}
-.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
-.dow{text-align:center;font-size:9px;color:var(--t3);font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 0}
-.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.day{min-height:40px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 1px;cursor:pointer;transition:background .1s}
-.day:active{background:var(--sur2)}
-.day.today .dn{background:var(--acc);color:#000;border-radius:50%;font-weight:900}
-.day.sel{background:var(--sur3)}
-.day.om .dn{color:var(--t4)}
-.dn{font-size:12px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:600;line-height:1}
-.ddots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;max-width:22px}
-.ddot{width:5px;height:5px;border-radius:50%}
-.ddot.done{opacity:.35}
-.day-tasks{padding:8px 12px 6px;border-top:1px solid var(--bor);background:var(--bg2)}
-.dt-row{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--bor)}
-.dt-row:last-child{border-bottom:none}
-.dt-chk{width:20px;height:20px;min-width:20px;border-radius:50%;border:2px solid var(--bor3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;font-weight:800;color:transparent;transition:all .15s}
-.dt-chk.done{background:var(--acc);border-color:var(--acc);color:#000}
-.dt-name{font-size:12px;font-weight:600;color:var(--t0);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dt-bdg{font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px}
-
-/* ======== WEATHER SHEET ======== */
-.wxd-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--bor)}
-.wxd-row:last-child{border-bottom:none}
-.wxd-name{font-size:12px;font-weight:700;color:var(--t1);width:60px}
-.wxd-ico{font-size:20px;width:26px;text-align:center}
-.wxd-temps{font-size:16px;font-weight:700;color:var(--t0);flex:1;letter-spacing:-.03em}
-.wxd-temps span{color:var(--t2);font-weight:500;font-size:13px}
-.wxd-right{text-align:right}
-.wxd-rain{font-size:11px;color:var(--cw);font-weight:700}
-.wxd-note{font-size:9px;color:var(--t3);margin-top:1px;font-weight:700;letter-spacing:.04em}
-.wxd-note.frost{color:var(--danger)}
-.wxd-note.ok{color:var(--acc)}
-
-/* ======== PLANT DETAIL ======== */
-.pd-img{width:100%;height:200px;object-fit:cover;display:block;background:var(--bg3)}
-.pd-em{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:80px;background:var(--bg3)}
-.pd-body{padding:14px 16px}
-.pd-name{font-size:22px;font-weight:800;color:var(--t0);letter-spacing:-.04em;line-height:1.1}
-.pd-lat{font-size:12px;color:var(--t2);font-style:italic;margin-top:3px}
-.pd-zone{font-size:11px;color:var(--acc);font-weight:700;margin-top:4px}
-.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
-.pd-stat{background:var(--bg2);border-radius:var(--r);padding:10px;text-align:center;border:1px solid var(--bor)}
-.pd-sv{font-size:14px;font-weight:800;color:var(--acc);letter-spacing:-.02em}
-.pd-sl{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
-.tip-box{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:10px 13px;margin:10px 0;font-size:12px;color:#fbbf24;line-height:1.55;font-weight:500}
-.bloom-bar{display:flex;gap:2px;margin-top:5px}
-.bmon{flex:1;height:5px;border-radius:2px;background:var(--bg3)}
-.bmon.on{background:var(--acc)}
-
-/* ======== FORMS ======== */
-.fg{margin-bottom:12px}
-.fl{font-size:10px;font-weight:800;color:var(--t2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;display:block}
-.fi{
-  width:100%;padding:11px 13px;
-  background:var(--bg2);border:1.5px solid var(--bor2);
-  border-radius:var(--r);font-size:14px;font-weight:500;
-  color:var(--t0);outline:none;transition:border-color .15s;
+/* =========================================================
+   SHEETS
+   ========================================================= */
+.sheet-backdrop{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.4);opacity:0;pointer-events:none;
+  transition:opacity .25s;
 }
-.fi:focus{border-color:var(--acc)}
-.fi::placeholder{color:var(--t4)}
-.sun-btns{display:flex;gap:6px}
-.sun-btn{
-  flex:1;padding:9px 5px;border-radius:var(--r);
-  border:1.5px solid var(--bor2);background:var(--bg2);
-  color:var(--t2);text-align:center;font-size:11px;font-weight:700;
-  transition:all .15s;
-}
-.sun-btn.on{background:rgba(6,193,103,.15);color:var(--acc);border-color:var(--acc)}
-.seg{display:flex;gap:5px;flex-wrap:wrap}
-.seg-b{
-  padding:8px 13px;border-radius:20px;font-size:12px;font-weight:700;
-  border:1.5px solid var(--bor2);color:var(--t2);background:var(--bg2);
-  transition:all .15s;flex:1;text-align:center;
-}
-.seg-b.on{background:var(--t0);color:var(--bg);border-color:var(--t0)}
-html.lm .seg-b.on{background:var(--bg);color:var(--t0)}
-.cc-row{display:flex;gap:7px;flex-wrap:wrap}
-.cc{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:border-color .15s,transform .15s}
-.cc.on{border-color:var(--t0);transform:scale(1.14)}
-.mog{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
-.mob{padding:6px 2px;border-radius:6px;font-size:10px;font-weight:700;border:1.5px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;transition:all .15s}
-.mob.on{background:var(--acc);color:#000;border-color:var(--acc)}
-.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.tb{padding:10px 4px;border-radius:var(--r);font-size:11px;font-weight:700;border:1.5px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;transition:all .15s;line-height:1.5}
-.tb.on{border-color:var(--acc);color:var(--acc);background:rgba(6,193,103,.1)}
-.btn-p{
-  width:100%;padding:13px;
-  background:var(--acc);color:#000;
-  border-radius:var(--r);font-size:15px;font-weight:800;
-  border:none;font-family:'Inter',sans-serif;
-  transition:opacity .15s;letter-spacing:-.02em;
-}
-.btn-p:active{opacity:.82}
-.btn-s{width:100%;padding:12px;background:var(--sur2);color:var(--t1);border-radius:var(--r);font-size:14px;font-weight:700;border:1.5px solid var(--bor2);margin-top:8px}
-.btn-d{width:100%;padding:11px;background:rgba(239,68,68,.1);color:var(--danger);border-radius:var(--r);font-size:13px;font-weight:700;border:1.5px solid rgba(239,68,68,.25);margin-top:8px}
-.btn-blue{width:100%;padding:12px;background:var(--blue);color:#fff;border-radius:var(--r);font-size:14px;font-weight:800;border:none;font-family:'Inter',sans-serif;margin-top:8px}
-
-/* ======== PLANT SEARCH ======== */
-.plist{max-height:240px;overflow-y:auto;border:1.5px solid var(--bor2);border-radius:var(--r);margin-top:7px}
-.pi{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--bor);cursor:pointer;transition:background .1s}
-.pi:last-child{border-bottom:none}
-.pi:active{background:var(--sur2)}
-.pi-em{width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid var(--bor2)}
-.pi-name{font-size:13px;font-weight:700;color:var(--t0);letter-spacing:-.01em}
-.pi-lat{font-size:10px;color:var(--t2);font-style:italic}
-.pi-wd{font-size:10px;color:var(--acc);font-weight:800}
-
-/* ======== SHEETS — Facebook bottom sheet ======== */
-.sbd{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-.sbd.open{opacity:1;pointer-events:all}
+.sheet-backdrop.open{opacity:1;pointer-events:all}
 .sheet{
   position:fixed;bottom:0;left:0;right:0;z-index:310;
-  background:var(--bg1);
-  border-radius:20px 20px 0 0;
-  border-top:1px solid var(--bor2);
-  max-height:93dvh;overflow-y:auto;
+  background:var(--bg);border-radius:16px 16px 0 0;
+  border-top:1px solid var(--bor);
+  max-height:92dvh;overflow-y:auto;
   transform:translateY(100%);
   transition:transform .3s cubic-bezier(.2,.8,.3,1);
   padding-bottom:calc(16px + var(--sb));
 }
 .sheet.open{transform:none}
-.sh{width:36px;height:4px;background:var(--bor3);border-radius:2px;margin:12px auto 0}
-.s-hdr{padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bor)}
-.s-title{font-size:18px;font-weight:800;color:var(--t0);letter-spacing:-.04em}
-.s-close{width:30px;height:30px;border-radius:50%;background:var(--sur2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2)}
-.s-body{padding:14px 16px}
+.sheet-greep{width:32px;height:3px;background:var(--bor2);border-radius:2px;margin:12px auto 0}
+.sheet-kop{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bor)}
+.sheet-titel{font-size:17px;font-weight:600;color:var(--t0);letter-spacing:-.02em}
+.sheet-sluit{width:28px;height:28px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t2)}
+.sheet-body{padding:14px 16px}
 
-/* ======== MEER PAGE ======== */
-.meer-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 14px 0}
-.ms-card{background:var(--bg1);border:1px solid var(--bor);border-radius:var(--r2);padding:14px;text-align:center}
-.ms-n{font-size:32px;font-weight:900;color:var(--t0);letter-spacing:-.06em;line-height:1}
-.ms-l{font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
-.ac{
-  background:var(--bg1);border:1px solid var(--bor);
-  border-radius:var(--r2);padding:14px;margin:8px 14px 0;
-}
-.ac-t{font-size:11px;font-weight:800;color:var(--t2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-.ab{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 12px;border-radius:var(--r);
-  background:var(--sur2);margin-bottom:6px;
-  width:100%;text-align:left;font-size:13px;
-  color:var(--t1);font-weight:600;
-  transition:background .12s;letter-spacing:-.01em;
-}
-.ab:active{background:var(--sur3)}
-.ab.red{color:var(--danger)}
-.dz{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:var(--r2);padding:14px;margin:8px 14px 0}
-.dz-t{font-size:11px;font-weight:800;color:var(--danger);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-.pfooter{text-align:center;padding:20px;font-size:11px;color:var(--t3);font-weight:500}
+/* Form elementen */
+.veld{margin-bottom:12px}
+.veld-label{font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;display:block}
+.veld-input{width:100%;padding:10px 12px;background:var(--bg2);border:1px solid var(--bor2);border-radius:var(--rs);font-size:14px;color:var(--t0);outline:none;transition:border-color .15s}
+.veld-input:focus{border-color:var(--acc)}
+.veld-input::placeholder{color:var(--t3)}
+.segmentknop-groep{display:flex;gap:5px}
+.segmentknop{flex:1;padding:8px 10px;border-radius:var(--rs);font-size:12px;font-weight:600;border:1px solid var(--bor2);color:var(--t2);background:var(--bg2);text-align:center;transition:all .15s}
+.segmentknop.actief{background:var(--t0);color:var(--bg);border-color:var(--t0)}
+.zon-knoppen{display:flex;gap:5px}
+.zon-knop{flex:1;padding:8px;border-radius:var(--rs);border:1px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;font-size:11px;font-weight:600;transition:all .15s}
+.zon-knop.actief{background:var(--acc-bg);color:var(--acc);border-color:var(--acc)}
+.kleur-rij{display:flex;gap:7px;flex-wrap:wrap}
+.kleur-cirkel{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s,transform .15s}
+.kleur-cirkel.actief{border-color:var(--t0);transform:scale(1.14)}
+.maand-raster{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.maand-knop{padding:5px 2px;border-radius:6px;font-size:10px;font-weight:600;border:1px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;transition:all .15s}
+.maand-knop.actief{background:var(--acc);color:#fff;border-color:var(--acc)}
+.type-raster{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.type-knop{padding:8px 3px;border-radius:var(--rs);font-size:11px;font-weight:600;border:1px solid var(--bor2);background:var(--bg2);color:var(--t2);text-align:center;transition:all .15s;line-height:1.5}
+.type-knop.actief{border-color:var(--acc);color:var(--acc);background:var(--acc-bg)}
+.hoofd-knop{width:100%;padding:12px;background:var(--acc);color:#fff;border-radius:var(--rs);font-size:14px;font-weight:600;border:none;font-family:'Inter',sans-serif;transition:opacity .15s}
+.hoofd-knop:active{opacity:.82}
+.sec-knop{width:100%;padding:11px;background:var(--bg2);color:var(--t1);border-radius:var(--rs);font-size:13px;font-weight:500;border:1px solid var(--bor2);margin-top:7px}
+.gevaar-knop{width:100%;padding:10px;background:rgba(220,38,38,.07);color:var(--danger);border-radius:var(--rs);font-size:13px;font-weight:600;border:1px solid rgba(220,38,38,.2);margin-top:7px}
 
-/* ======== ZONE DETAIL SHEET ======== */
-.zdpc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
-.zdp{
-  display:flex;align-items:center;gap:5px;
-  padding:5px 10px;border-radius:20px;
-  background:var(--bg2);border:1px solid var(--bor);
-  font-size:12px;color:var(--t1);cursor:pointer;font-weight:600;
-}
-.zdp:active{background:var(--bg3)}
+/* Plantendatabase zoeklijst */
+.plant-zoeklijst{max-height:220px;overflow-y:auto;border:1px solid var(--bor);border-radius:var(--rs);margin-top:6px}
+.plant-zoekitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-bottom:1px solid var(--bor);cursor:pointer;transition:background .1s}
+.plant-zoekitem:last-child{border-bottom:none}
+.plant-zoekitem:active{background:var(--bg2)}
+.pzi-em{width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;border:1px solid var(--bor)}
+.pzi-naam{font-size:13px;font-weight:500;color:var(--t0)}
+.pzi-lat{font-size:10px;color:var(--t2);font-style:italic}
+.pzi-water{font-size:10px;color:var(--acc);font-weight:600}
 
-/* ======== MISC ======== */
-.dvdr{height:1px;background:var(--bor);margin:12px 0}
-.empty{text-align:center;padding:48px 20px;color:var(--t3)}
-.empty-i{font-size:48px;margin-bottom:10px;opacity:.3}
-.empty-t{font-size:14px;font-weight:500;line-height:1.6}
+/* Plant detail */
+.pd-foto{width:100%;height:180px;object-fit:cover;background:var(--bg2);display:block}
+.pd-em{width:100%;height:180px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:64px}
+.pd-inhoud{padding:14px 16px}
+.pd-naam{font-size:20px;font-weight:600;color:var(--t0);letter-spacing:-.03em}
+.pd-lat{font-size:12px;color:var(--t2);font-style:italic;margin-top:2px}
+.pd-zone{font-size:11px;color:var(--acc);font-weight:600;margin-top:3px}
+.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
+.pd-stat{background:var(--bg2);border-radius:var(--rs);padding:9px;text-align:center;border:1px solid var(--bor)}
+.pd-stat-w{font-size:14px;font-weight:600;color:var(--acc)}
+.pd-stat-l{font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.tip-kader{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.18);border-radius:var(--rs);padding:9px 12px;margin:9px 0;font-size:12px;color:var(--warn);line-height:1.55}
+.bloei-balk{display:flex;gap:2px;margin-top:4px}
+.bloei-maand{flex:1;height:4px;border-radius:2px;background:var(--bg3)}
+.bloei-maand.aan{background:var(--acc)}
+.verdeler{height:1px;background:var(--bor);margin:10px 0}
+
+/* Zone detail sheet */
+.zd-planten{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.zd-plant{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;background:var(--bg2);border:1px solid var(--bor);font-size:11px;color:var(--t1);cursor:pointer}
+
+/* Toast */
 #toast{
-  position:fixed;bottom:calc(70px + var(--sb) + 8px);
-  left:50%;transform:translateX(-50%) translateY(14px);
-  background:var(--t0);border-radius:20px;
-  padding:9px 18px;font-size:12px;font-weight:800;
-  color:var(--bg);white-space:nowrap;z-index:500;
-  opacity:0;pointer-events:none;
+  position:fixed;bottom:calc(68px + var(--sb) + 8px);
+  left:50%;transform:translateX(-50%) translateY(12px);
+  background:var(--t0);border-radius:20px;padding:8px 16px;
+  font-size:12px;font-weight:600;color:var(--bg);
+  white-space:nowrap;z-index:500;opacity:0;pointer-events:none;
   transition:opacity .2s,transform .2s;
-  letter-spacing:-.01em;
-  box-shadow:0 4px 20px rgba(0,0,0,.4);
+  box-shadow:0 2px 16px rgba(0,0,0,.12);
 }
-html.lm #toast{background:var(--bg);color:var(--t0)}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.zichtbaar{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div id="hdr">
-  <div class="hdr-logo">
-    <div class="hdr-logo-mark">M</div>
-    <div class="hdr-logo-text">Mijn<span>Tuin</span></div>
+  <div class="hdr-naam">Mijn<span>Tuin</span></div>
+  <div class="hdr-wx-pill" id="wxPill" onclick="openSheet('sWeer')" style="display:none">
+    <span id="wxIco">&#9729;</span>
+    <span id="wxTemp" style="font-weight:600;color:var(--t0)">--&deg;</span>
+    <span id="wxRain" style="color:var(--cw);font-weight:600"></span>
   </div>
-  <div class="wx-pill" id="wxPill" onclick="openSheet('sWx')" style="display:none">
-    <span class="wx-ico" id="wxIco">&#9729;</span>
-    <span class="wx-temp" id="wxTemp">--&deg;</span>
-    <span class="wx-rain" id="wxRain"></span>
-  </div>
-  <button class="hdr-icon-btn" onclick="toggleTheme()">&#9680;</button>
+  <button class="hdr-knop" onclick="toggleTheme()">&#9680;</button>
 </div>
 
-<!-- WRAP -->
 <div id="wrap">
 
-  <!-- VANDAAG -->
-  <div class="page active" id="pToday">
-    <div class="greeting">
-      <div class="greeting-top">
-        <div>
-          <div class="greeting-txt" id="greetTxt">Goedemorgen</div>
-          <div class="greeting-date" id="greetDate"></div>
-        </div>
-        <div class="greeting-avatar" id="greetAvatar">&#127807;</div>
+  <!-- KALENDER -->
+  <div class="pagina actief" id="pKalender">
+    <div class="kal-nav">
+      <div class="kal-maand" id="kalMaand"></div>
+      <div class="kal-nav-knoppen">
+        <button class="kal-nav-btn" onclick="kalNav(-1)">&#8249;</button>
+        <button class="kal-nav-btn" onclick="kalNav(1)">&#8250;</button>
       </div>
     </div>
     <div id="wxBanners"></div>
-    <div class="stat-row" id="statGrid"></div>
-    <div class="prog-wrap">
-      <div class="prog-top"><div class="prog-lbl">Voortgang</div><div class="prog-pct" id="progPct">0%</div></div>
-      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="wx-strook" id="kalStrook"></div>
+    <div class="kal-dow">
+      <div class="kal-dow-cel">Zo</div><div class="kal-dow-cel">Ma</div>
+      <div class="kal-dow-cel">Di</div><div class="kal-dow-cel">Wo</div>
+      <div class="kal-dow-cel">Do</div><div class="kal-dow-cel">Vr</div>
+      <div class="kal-dow-cel">Za</div>
     </div>
-    <div id="odBanner"></div>
-    <div class="sec-hdr"><div class="sec-title">Vandaag</div></div>
-    <div class="sec" id="todayList"></div>
-    <div class="sec-hdr"><div class="sec-title">Aankomend</div></div>
-    <div class="sec" id="upcomingList"></div>
-    <div class="sec-hdr"><div class="sec-title">Zones</div><div class="sec-link" onclick="goTab('pZones')">Alle bekijken</div></div>
-    <div id="homeZones"></div>
-    <div style="height:10px"></div>
+    <div class="kal-grid" id="kalGrid"></div>
+    <div class="kal-dag-kop" id="kalDagKop"></div>
+    <div id="kalDagLijst"></div>
+  </div>
+
+  <!-- TAKEN -->
+  <div class="pagina" id="pTaken">
+    <div class="filter-balk">
+      <button class="filter-knop actief" data-f="open" onclick="setTakenFilter('open')">Open</button>
+      <button class="filter-knop" data-f="vandaag" onclick="setTakenFilter('vandaag')">Vandaag</button>
+      <button class="filter-knop" data-f="laat" onclick="setTakenFilter('laat')">Te laat</button>
+      <button class="filter-knop" data-f="gedaan" onclick="setTakenFilter('gedaan')">Gedaan</button>
+    </div>
+    <div class="taken-sec" id="takenLijst"></div>
   </div>
 
   <!-- ZONES -->
-  <div class="page" id="pZones">
-    <div style="height:12px"></div>
-    <div id="zoneList"></div>
-    <div id="zoneEmpty" class="empty" style="display:none">
-      <div class="empty-i">&#11041;</div>
-      <div class="empty-t">Nog geen zones.<br>Maak er een aan via <strong>+</strong></div>
+  <div class="pagina" id="pZones">
+    <div class="zones-sec" id="zoneList"></div>
+    <div id="zoneEmpty" class="leeg-zones" style="display:none">
+      Nog geen zones.<br>Maak er een aan via de + knop.
     </div>
   </div>
 
-  <!-- PLANTEN (foto feed) -->
-  <div class="page" id="pPlanten">
-    <div style="height:10px"></div>
-    <div class="fchips" id="plantFilter"></div>
-    <div id="plantGrid"></div>
-    <div id="plantEmpty" class="empty" style="display:none">
-      <div class="empty-i">&#10047;</div>
-      <div class="empty-t">Nog geen planten.<br>Voeg toe via <strong>+</strong></div>
-    </div>
-  </div>
-
-  <!-- PLANNING -->
-  <div class="page" id="pPlanning">
-    <div class="plan-hdr">
-      <div class="plan-mo" id="planMo"></div>
-      <div class="plan-nav">
-        <button class="plan-nb" onclick="planNav(-1)">&#8249;</button>
-        <button class="plan-nb" onclick="planNav(1)">&#8250;</button>
-      </div>
-    </div>
-    <div class="wx-strip" id="wxStrip"></div>
-    <div id="planList"></div>
-    <div id="planEmpty" class="empty" style="display:none">
-      <div class="empty-i">&#9638;</div>
-      <div class="empty-t">Geen taken deze maand.<br>Sync via <strong>Meer</strong></div>
+  <!-- PLANTEN -->
+  <div class="pagina" id="pPlanten">
+    <div class="fchips" style="padding:12px 14px 4px" id="plantFilter"></div>
+    <div class="planten-sec" id="plantGrid"></div>
+    <div id="plantEmpty" class="leeg-planten" style="display:none">
+      Nog geen planten.<br>Voeg ze toe via de + knop.
     </div>
   </div>
 
   <!-- MEER -->
-  <div class="page" id="pMeer">
+  <div class="pagina" id="pMeer">
     <div class="meer-stats" id="meerStats"></div>
-    <div class="ac"><div class="ac-t">&#9672; Sync</div>
-      <button class="ab" onclick="syncMonth()">&#9672; Genereer taken &#8212; deze maand</button>
-      <button class="ab" onclick="syncYear()">&#9638; Genereer taken &#8212; heel jaar</button>
-      <button class="ab" onclick="fetchWx(true)">&#9680; Weer opnieuw laden</button>
+    <div class="meer-sectie">
+      <div class="meer-sectie-kop">Synchroniseren</div>
+      <button class="meer-knop" onclick="syncMonth()">Genereer taken deze maand</button>
+      <button class="meer-knop" onclick="syncYear()">Genereer taken heel jaar</button>
+      <button class="meer-knop" onclick="fetchWx(true)">Weer opnieuw laden</button>
     </div>
-    <div class="ac"><div class="ac-t">&#9638; Data</div>
-      <button class="ab" onclick="exportICS()">&#9636; Exporteer agenda (.ics)</button>
-      <button class="ab" onclick="expJSON()">&#11041; Exporteer backup (.json)</button>
-      <button class="ab" onclick="impJSON()">&#9680; Importeer backup</button>
+    <div class="meer-sectie">
+      <div class="meer-sectie-kop">Gegevens</div>
+      <button class="meer-knop" onclick="exportICS()">Exporteer agenda (.ics)</button>
+      <button class="meer-knop" onclick="expJSON()">Exporteer back-up (.json)</button>
+      <button class="meer-knop" onclick="impJSON()">Importeer back-up</button>
+      <button class="meer-knop" onclick="clearDone()">Wis voltooide taken</button>
     </div>
-    <div class="ac"><div class="ac-t">&#10047; Beheer</div>
-      <button class="ab" onclick="clearDone()">&#9642; Wis voltooide taken</button>
+    <div class="gevaar-zone">
+      <div class="meer-sectie-kop">Gevarenzone</div>
+      <button class="meer-knop rood" onclick="clearAll()">Wis alle gegevens</button>
     </div>
-    <div class="dz"><div class="dz-t">&#9888; Gevarenzone</div>
-      <button class="ab red" onclick="clearAll()">&#9672; Wis alles</button>
-    </div>
-    <div class="pfooter">MijnTuin v3 &middot; <span id="ftPlants">0</span> planten &middot; <span id="ftLoc">locatie &#8212;</span></div>
+    <div class="app-footer">MijnTuin &middot; <span id="ftPlants">0</span> planten &middot; <span id="ftLoc">locatie onbekend</span></div>
   </div>
 
 </div><!-- /wrap -->
 
-<!-- NAVBAR -->
+<!-- NAVIGATIE -->
 <nav id="nav">
-  <button class="nb on" data-p="pToday" onclick="goTab('pToday')">
-    <div class="nb-i">&#9672;</div><div class="nb-l">Vandaag</div>
-  </button>
-  <button class="nb" data-p="pZones" onclick="goTab('pZones')">
-    <div class="nb-i">&#11041;</div><div class="nb-l">Zones</div>
-  </button>
-  <button class="nb" data-p="pPlanten" onclick="goTab('pPlanten')">
-    <div class="nb-i">&#10047;</div><div class="nb-l">Planten</div>
-  </button>
-  <button class="nb" data-p="pPlanning" onclick="goTab('pPlanning')">
-    <div class="nb-i">&#9638;</div><div class="nb-l">Planning</div>
-  </button>
-  <button class="nb" data-p="pMeer" onclick="goTab('pMeer')">
-    <div class="nb-i">&#9642;</div><div class="nb-l">Meer</div>
-  </button>
+  <button class="nb on" data-p="pKalender" onclick="goTab('pKalender')"><div class="nb-i">&#128197;</div>Kalender</button>
+  <button class="nb" data-p="pTaken" onclick="goTab('pTaken')"><div class="nb-i">&#9745;</div>Taken</button>
+  <button class="nb" data-p="pZones" onclick="goTab('pZones')"><div class="nb-i">&#127807;</div>Zones</button>
+  <button class="nb" data-p="pPlanten" onclick="goTab('pPlanten')"><div class="nb-i">&#127804;</div>Planten</button>
+  <button class="nb" data-p="pMeer" onclick="goTab('pMeer')"><div class="nb-i">&#8943;</div>Meer</button>
 </nav>
 
 <button id="fab" onclick="fabClick()">+</button>
 <div id="toast"></div>
-<div class="sbd" id="bd" onclick="closeAll()"></div>
+<div class="sheet-backdrop" id="backdrop" onclick="closeAll()"></div>
 
-<!-- SHEETS -->
+<!-- SHEET: ZONE AANMAKEN -->
 <div class="sheet" id="sZone">
-  <div class="sh"></div>
-  <div class="s-hdr"><div class="s-title" id="sTZ">Nieuwe zone</div><button class="s-close" onclick="closeSheet('sZone')">&#10005;</button></div>
-  <div class="s-body">
-    <div class="fg"><label class="fl">Naam</label><input class="fi" id="zName" placeholder="bijv. Achtertuin&#8230;"></div>
-    <div class="fg"><label class="fl">Omschrijving</label><input class="fi" id="zDesc" placeholder="Optioneel"></div>
-    <div class="fg"><label class="fl">Zonlicht</label>
-      <div class="sun-btns">
-        <button class="sun-btn on" data-s="zon" onclick="setSun('zon')">&#9728; Zon</button>
-        <button class="sun-btn" data-s="halfschaduw" onclick="setSun('halfschaduw')">&#9680; Half</button>
-        <button class="sun-btn" data-s="schaduw" onclick="setSun('schaduw')">&#9679; Schaduw</button>
+  <div class="sheet-greep"></div>
+  <div class="sheet-kop">
+    <div class="sheet-titel" id="sTZ">Nieuwe zone</div>
+    <button class="sheet-sluit" onclick="closeSheet('sZone')">&#10005;</button>
+  </div>
+  <div class="sheet-body">
+    <div class="veld"><label class="veld-label">Naam</label><input class="veld-input" id="zName" placeholder="bijv. Achtertuin, balkon&#8230;"></div>
+    <div class="veld"><label class="veld-label">Omschrijving</label><input class="veld-input" id="zDesc" placeholder="Optioneel"></div>
+    <div class="veld"><label class="veld-label">Zonlicht</label>
+      <div class="zon-knoppen">
+        <button class="zon-knop actief" data-s="zon" onclick="setSun('zon')">&#9728; Volle zon</button>
+        <button class="zon-knop" data-s="halfschaduw" onclick="setSun('halfschaduw')">&#9680; Halfschaduw</button>
+        <button class="zon-knop" data-s="schaduw" onclick="setSun('schaduw')">&#9679; Schaduw</button>
       </div>
     </div>
-    <div class="fg"><label class="fl">Kleur</label><div class="cc-row" id="ccPicker"></div></div>
-    <button class="btn-p" onclick="saveZone()">Zone opslaan</button>
+    <div class="veld"><label class="veld-label">Kleur</label><div class="kleur-rij" id="ccPicker"></div></div>
+    <button class="hoofd-knop" onclick="saveZone()">Zone opslaan</button>
   </div>
 </div>
 
+<!-- SHEET: PLANT TOEVOEGEN -->
 <div class="sheet" id="sPlant">
-  <div class="sh"></div>
-  <div class="s-hdr"><div class="s-title">Plant toevoegen</div><button class="s-close" onclick="closeSheet('sPlant')">&#10005;</button></div>
-  <div class="s-body">
-    <div class="fg"><label class="fl">Zone</label><select class="fi" id="pZoneSel"></select></div>
-    <div class="fg"><label class="fl">Zoeken</label><input class="fi" id="pSearch" placeholder="Naam of Latijn&#8230;" oninput="filterPDB()"></div>
-    <div class="fchips" style="padding:0;margin-bottom:7px" id="catChips">
-      <div class="fchip on" data-c="all" onclick="setCat('all')">Alle</div>
-      <div class="fchip" data-c="bloem" onclick="setCat('bloem')">Bloem</div>
-      <div class="fchip" data-c="plant" onclick="setCat('plant')">Plant</div>
-      <div class="fchip" data-c="boom" onclick="setCat('boom')">Boom</div>
-      <div class="fchip" data-c="gras" onclick="setCat('gras')">Gras</div>
+  <div class="sheet-greep"></div>
+  <div class="sheet-kop">
+    <div class="sheet-titel">Plant toevoegen</div>
+    <button class="sheet-sluit" onclick="closeSheet('sPlant')">&#10005;</button>
+  </div>
+  <div class="sheet-body">
+    <div class="veld"><label class="veld-label">Zone</label><select class="veld-input" id="pZoneSel"></select></div>
+    <div class="veld"><label class="veld-label">Zoeken</label><input class="veld-input" id="pSearch" placeholder="Naam of Latijnse naam&#8230;" oninput="filterPDB()"></div>
+    <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none" id="catChips">
+      <div class="filter-knop actief" data-c="all" onclick="setCat('all')">Alle</div>
+      <div class="filter-knop" data-c="bloem" onclick="setCat('bloem')">Bloem</div>
+      <div class="filter-knop" data-c="plant" onclick="setCat('plant')">Plant</div>
+      <div class="filter-knop" data-c="boom" onclick="setCat('boom')">Boom</div>
+      <div class="filter-knop" data-c="gras" onclick="setCat('gras')">Gras</div>
     </div>
-    <div class="plist" id="pList"></div>
-    <div class="dvdr"></div>
-    <div class="fl">Handmatig toevoegen</div>
-    <div class="fg"><input class="fi" id="pCustom" placeholder="Naam van de plant"></div>
-    <button class="btn-s" onclick="addCustom()">+ Toevoegen</button>
+    <div class="plant-zoeklijst" id="pList"></div>
+    <div class="verdeler"></div>
+    <div class="veld-label" style="margin-bottom:6px">Handmatig toevoegen</div>
+    <div class="veld"><input class="veld-input" id="pCustom" placeholder="Naam van de plant"></div>
+    <button class="sec-knop" onclick="addCustom()">+ Handmatig toevoegen</button>
   </div>
 </div>
 
+<!-- SHEET: PLANT DETAIL -->
 <div class="sheet" id="sPD">
-  <div class="sh"></div>
-  <div class="s-hdr"><div class="s-title">Plantdetail</div><button class="s-close" onclick="closeSheet('sPD')">&#10005;</button></div>
+  <div class="sheet-greep"></div>
+  <div class="sheet-kop">
+    <div class="sheet-titel">Plant</div>
+    <button class="sheet-sluit" onclick="closeSheet('sPD')">&#10005;</button>
+  </div>
   <div id="pdBody"></div>
 </div>
 
+<!-- SHEET: TAAK AANMAKEN -->
 <div class="sheet" id="sTask">
-  <div class="sh"></div>
-  <div class="s-hdr"><div class="s-title">Taak aanmaken</div><button class="s-close" onclick="closeSheet('sTask')">&#10005;</button></div>
-  <div class="s-body">
-    <div class="fg"><label class="fl">Naam</label><input class="fi" id="tName" placeholder="Omschrijving&#8230;"></div>
-    <div class="fg"><label class="fl">Type</label>
-      <div class="tg" id="typeGrid">
-        <button class="tb on" data-t="water" onclick="setTT('water')">&#128167;<br>Water</button>
-        <button class="tb" data-t="snoei" onclick="setTT('snoei')">&#9986;<br>Snoei</button>
-        <button class="tb" data-t="bemest" onclick="setTT('bemest')">&#11041;<br>Bemest</button>
-        <button class="tb" data-t="maai" onclick="setTT('maai')">&#9636;<br>Maai</button>
-        <button class="tb" data-t="verticuteer" onclick="setTT('verticuteer')">&#9638;<br>Vert.</button>
-        <button class="tb" data-t="kalk" onclick="setTT('kalk')">&#9672;<br>Kalk</button>
-        <button class="tb" data-t="behandel" onclick="setTT('behandel')">&#8853;<br>Behandel</button>
-        <button class="tb" data-t="overig" onclick="setTT('overig')">&#9642;<br>Overig</button>
+  <div class="sheet-greep"></div>
+  <div class="sheet-kop">
+    <div class="sheet-titel">Taak aanmaken</div>
+    <button class="sheet-sluit" onclick="closeSheet('sTask')">&#10005;</button>
+  </div>
+  <div class="sheet-body">
+    <div class="veld"><label class="veld-label">Naam</label><input class="veld-input" id="tName" placeholder="Omschrijving&#8230;"></div>
+    <div class="veld"><label class="veld-label">Type</label>
+      <div class="type-raster" id="typeGrid">
+        <button class="type-knop actief" data-t="water" onclick="setTT('water')">&#128167;<br>Water</button>
+        <button class="type-knop" data-t="snoei" onclick="setTT('snoei')">&#9986;<br>Snoeien</button>
+        <button class="type-knop" data-t="bemest" onclick="setTT('bemest')">&#127807;<br>Bemesten</button>
+        <button class="type-knop" data-t="maai" onclick="setTT('maai')">&#128000;<br>Maaien</button>
+        <button class="type-knop" data-t="verticuteer" onclick="setTT('verticuteer')">&#9638;<br>Verticuteren</button>
+        <button class="type-knop" data-t="kalk" onclick="setTT('kalk')">&#11044;<br>Kalken</button>
+        <button class="type-knop" data-t="behandel" onclick="setTT('behandel')">&#8853;<br>Behandelen</button>
+        <button class="type-knop" data-t="overig" onclick="setTT('overig')">&#9642;<br>Overig</button>
       </div>
     </div>
-    <div class="fg"><label class="fl">Datum</label><input class="fi" type="date" id="tDue"></div>
-    <div class="fg"><label class="fl">Prioriteit</label>
-      <div class="seg">
-        <button class="seg-b" data-p="high" onclick="setTP('high')">Hoog</button>
-        <button class="seg-b on" data-p="normal" onclick="setTP('normal')">Normaal</button>
-        <button class="seg-b" data-p="low" onclick="setTP('low')">Laag</button>
+    <div class="veld"><label class="veld-label">Datum</label><input class="veld-input" type="date" id="tDue"></div>
+    <div class="veld"><label class="veld-label">Prioriteit</label>
+      <div class="segmentknop-groep">
+        <button class="segmentknop" data-p="high" onclick="setTP('high')">Hoog</button>
+        <button class="segmentknop actief" data-p="normal" onclick="setTP('normal')">Normaal</button>
+        <button class="segmentknop" data-p="low" onclick="setTP('low')">Laag</button>
       </div>
     </div>
-    <div class="fg"><label class="fl">Zone (opt.)</label><select class="fi" id="tZone"><option value="">&#8212; Geen &#8212;</option></select></div>
-    <button class="btn-p" onclick="saveTask()">Taak opslaan</button>
+    <div class="veld"><label class="veld-label">Zone (optioneel)</label><select class="veld-input" id="tZone"><option value="">&#8212; Geen zone &#8212;</option></select></div>
+    <button class="hoofd-knop" onclick="saveTask()">Taak opslaan</button>
   </div>
 </div>
 
+<!-- SHEET: ZONE DETAIL -->
 <div class="sheet" id="sZD">
-  <div class="sh"></div>
-  <div class="s-hdr"><div class="s-title" id="zdTitle">Zone</div><button class="s-close" onclick="closeSheet('sZD')">&#10005;</button></div>
-  <div class="s-body" id="zdBody"></div>
+  <div class="sheet-greep"></div>
+  <div class="sheet-kop">
+    <div class="sheet-titel" id="zdTitle">Zone</div>
+    <button class="sheet-sluit" onclick="closeSheet('sZD')">&#10005;</button>
+  </div>
+  <div class="sheet-body" id="zdBody"></div>
 </div>
 
-<div class="sheet" id="sWx">
-  <div class="sh"></div>
-  <div class="s-hdr"><div class="s-title">Weersoverzicht 7 dagen</div><button class="s-close" onclick="closeSheet('sWx')">&#10005;</button></div>
-  <div class="s-body" id="wxBody"><div style="color:var(--t3)">Laden&#8230;</div></div>
+<!-- SHEET: WEER DETAIL -->
+<div class="sheet" id="sWeer">
+  <div class="sheet-greep"></div>
+  <div class="sheet-kop">
+    <div class="sheet-titel">Weersoverzicht</div>
+    <button class="sheet-sluit" onclick="closeSheet('sWeer')">&#10005;</button>
+  </div>
+  <div class="sheet-body" id="wxBody"><div style="color:var(--t3);font-size:13px">Laden&#8230;</div></div>
 </div>
 
 <script>
+
 /* ============================================================
    PLANT DATABASE (135 soorten)
    ============================================================ */
@@ -1013,11 +839,11 @@ async function fetchWx(force=false){
     const d=await (await fetch(url)).json();
     WX={cur:d.current_weather,time:d.daily.time,precip:d.daily.precipitation_sum,tmax:d.daily.temperature_2m_max,tmin:d.daily.temperature_2m_min,code:d.daily.weathercode};
     localStorage.setItem('mt_wx',JSON.stringify({d:WX,ts:Date.now()}));
-    document.getElementById('ftLoc').textContent=`${wxLat.toFixed(2)}, ${wxLon.toFixed(2)}`;
-    applyWxUI();
+    document.getElementById('locatietekst').textContent=`${wxLat.toFixed(2)}, ${wxLon.toFixed(2)}`;
+    applyWxUI_wrapper();
   }catch(e){
     const c=localStorage.getItem('mt_wx');
-    if(c){try{const o=JSON.parse(c);if(Date.now()-o.ts<3.6e6){WX=o.d;applyWxUI();}}catch(e2){}}
+    if(c){try{const o=JSON.parse(c);if(Date.now()-o.ts<3.6e6){WX=o.d;applyWxUI_wrapper();}}catch(e2){}}
   }
 }
 
@@ -1038,7 +864,7 @@ function rainOnDate(ds){
   return i>=0?(WX.precip[i]||0):0;
 }
 
-function applyWxUI(){
+function applyWxUI_OLD_SKIP(){
   if(!WX)return;
   const pill=document.getElementById('wxPill');
   pill.style.display='flex';
@@ -1157,12 +983,14 @@ let curP='pToday';
 function goTab(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.p===id));
-  document.getElementById(id).classList.add('active');
+  const pg=document.getElementById(id);
+  if(pg)pg.classList.add('active');
   curP=id;
-  document.getElementById('wrap').scrollTop=0;
+  const w=document.getElementById('wrap');
+  if(w)w.scrollTop=0;
   renderPage(id);
 }
-function fabClick(){
+function fabKlik_SKIP(){
   if(curP==='pZones')openZSheet();
   else if(curP==='pPlanten')openAddPlant();
   else openTaskSheet();
@@ -1171,15 +999,15 @@ function fabClick(){
 /* ============================================================
    SHEETS
    ============================================================ */
-function openSheet(id){closeAll();document.getElementById('bd').classList.add('open');document.getElementById(id).classList.add('open');}
-function closeSheet(id){document.getElementById(id).classList.remove('open');document.getElementById('bd').classList.remove('open');}
-function closeAll(){document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));document.getElementById('bd').classList.remove('open');}
+function openSheet(id){sluitAlles();document.getElementById('backdrop').classList.add('open');document.getElementById(id).classList.add('open');}
+function closeSheet(id){document.getElementById(id).classList.remove('open');document.getElementById('backdrop').classList.remove('open');}
+function sluitAlles(){document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));document.getElementById('bd').classList.remove('open');}
 
 /* ============================================================
    TOAST
    ============================================================ */
 let _tt;
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2700);}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('zichtbaar');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('zichtbaar'),2700);}
 
 /* ============================================================
    HELPERS
@@ -1230,7 +1058,7 @@ function renderVandaag(){
   document.getElementById('upcomingList').innerHTML=up.length?up.map(t=>trHTML(t)).join(''):'<div style="color:var(--t3);font-size:12px;padding:6px 0 10px">Geen aankomende taken</div>';
   document.getElementById('homeZones').innerHTML=DB.zones.slice(0,3).map(z=>zcHTML(z)).join('')||'<div style="color:var(--t3);font-size:12px;padding:0 14px 10px">Nog geen zones</div>';
 }
-function scrd(n,l){return`<div class="stat-item"><div class="stat-num${l==='Open taken'&&n>0?' green':''}">${n}</div><div class="stat-lbl">${l}</div></div>`;}
+function scrd(n,l){return`<div class="stat-cel"><div class="stat-n">${n}</div><div class="stat-l">${l}</div></div>`;}
 
 /* ============================================================
    RENDER ZONES
@@ -1418,8 +1246,7 @@ function togglePCC(key){
    ============================================================ */
 function renderMeer(){
   const z=DB.zones.length,p=DB.plants.length,o=DB.tasks.filter(t=>t.status!=='done').length,d=DB.tasks.filter(t=>t.status==='done').length;
-  const ms=document.getElementById('meerStats');
-  ms.innerHTML=`<div class="ms-card"><div class="ms-n">${z}</div><div class="ms-l">Zones</div></div><div class="ms-card"><div class="ms-n">${p}</div><div class="ms-l">Planten</div></div><div class="ms-card"><div class="ms-n">${o}</div><div class="ms-l">Open</div></div><div class="ms-card"><div class="ms-n">${d}</div><div class="ms-l">Gedaan</div></div>`;
+  document.getElementById('meerStats').innerHTML=scrd(z,'Zones')+scrd(p,'Planten')+scrd(o,'Open taken')+scrd(d,'Gedaan');
   document.getElementById('ftPlants').textContent=p;
 }
 
@@ -1427,10 +1254,10 @@ function renderMeer(){
    RENDER DISPATCH
    ============================================================ */
 function renderPage(id){
-  if(id==='pToday')renderVandaag();
+  if(id==='pVandaag')renderVandaag();
   else if(id==='pZones')renderZones();
   else if(id==='pPlanten')renderPlanten();
-  else if(id==='pPlanning')renderPlanning();
+  else if(id==='pKalender')renderKalender_new();
   else if(id==='pMeer')renderMeer();
 }
 
@@ -1712,13 +1539,395 @@ function clearAll(){if(!confirm('Alles wissen?'))return;DB={zones:[],plants:[],t
 window.addEventListener('DOMContentLoaded',()=>{
   loadDB();
   if(localStorage.getItem('mt_theme')==='lm')applyTheme(true);
-  initCC();initPlan();
+  initCC();
+  initKal();
   document.getElementById('tDue').value=today();
   const cw=localStorage.getItem('mt_wx');
-  if(cw){try{const o=JSON.parse(cw);if(Date.now()-o.ts<3.6e6){WX=o.d;applyWxUI();}}catch(e){}}
+  if(cw){try{const o=JSON.parse(cw);if(Date.now()-o.ts<3.6e6){WX=o.d;applyWxUI_wrapper();}}catch(e){}}
   fetchWx();
-  renderVandaag();
+  renderKalender();
 });
+
+/* ===== KALENDER ===== */
+let kalY,kalM,kalSel;
+function initKal(){const n=new Date();kalY=n.getFullYear();kalM=n.getMonth();kalSel=today();}
+function kalNav(dir){kalM+=dir;if(kalM<0){kalM=11;kalY--;}if(kalM>11){kalM=0;kalY++;}renderKalender();}
+function renderKalender(){
+  const label=document.getElementById('kalMaand');
+  if(label)label.textContent=MFULL[kalM]+' '+kalY;
+  renderKalGrid();
+  renderKalDag(kalSel);
+  renderKalStrook();
+}
+function renderKalGrid(){
+  const el=document.getElementById('kalGrid');
+  if(!el)return;
+  const td=today();
+  const dim=new Date(kalY,kalM+1,0).getDate();
+  const eerste=new Date(kalY,kalM,1).getDay();
+  let html='';
+  for(let i=0;i<eerste;i++)html+=`<div class="kd kd-leeg"></div>`;
+  for(let d=1;d<=dim;d++){
+    const ds=`${kalY}-${String(kalM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dagtaken=DB.tasks.filter(t=>t.due===ds&&t.status!=='done');
+    const types=[...new Set(dagtaken.map(t=>t.type))].slice(0,3);
+    const stippen=types.map(t=>`<div class="kd-stip" style="background:${tColor(t)}"></div>`).join('');
+    const isVandaag=ds===td;
+    const isSel=ds===kalSel;
+    html+=`<div class="kd ${isVandaag?'kd-vandaag':''} ${isSel?'kd-sel':''}" onclick="kalKlikDag('${ds}')"><div class="kd-num">${d}</div><div class="kd-stippen">${stippen}</div></div>`;
+  }
+  el.innerHTML=html;
+}
+function kalKlikDag(ds){kalSel=ds;renderKalGrid();renderKalDag(ds);}
+function renderKalDag(ds){
+  const el=document.getElementById('kalDagLijst');
+  const kop=document.getElementById('kalDagKop');
+  if(!el||!kop)return;
+  if(!ds){el.innerHTML='';kop.textContent='';return;}
+  const d=parseD(ds);
+  kop.textContent=DNLS[d.getDay()]+' '+d.getDate()+' '+MFULL[d.getMonth()];
+  const taken=DB.tasks.filter(t=>t.due===ds).sort((a,b)=>a.status==='done'?1:-1);
+  if(!taken.length){el.innerHTML=`<div class="leeg-dag">Geen taken op deze dag</div>`;return;}
+  el.innerHTML=taken.map(t=>{
+    const gedaan=t.status==='done';
+    const zn=t.zid?' \u00B7 '+zName(t.zid):'';
+    return`<div class="kal-taak-rij ${gedaan?'gedaan':''}">
+      <div class="kal-taak-balk" style="background:${tColor(t.type)}"></div>
+      <div class="kt-chk ${gedaan?'kt-chk-aan':''}" onclick="doToggle('${t.id}');renderKalender()">${gedaan?'&#10003;':''}</div>
+      <div class="kt-inf"><div class="kt-naam">${t.title}</div><div class="kt-meta">${tShort(t.type)}${zn}</div></div>
+    </div>`;
+  }).join('');
+}
+function renderKalStrook(){
+  const el=document.getElementById('kalStrook');
+  if(!el||!WX)return;
+  const dn=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+  el.innerHTML=WX.time.map((t,i)=>{
+    const d=new Date(t+'T00:00:00');
+    const r=WX.precip[i]||0;
+    const regen=r>3;
+    return`<div class="wx-p ${regen?'wx-p-regen':''}">${wIco(WX.code[i])} ${dn[d.getDay()]} ${Math.round(WX.tmax[i])}&deg;${regen?' &middot; '+r.toFixed(0)+'mm':''}</div>`;
+  }).join('');
+}
+/* ===== TAKEN PAGINA ===== */
+let takenFilter='open';
+function setTakenFilter(f){
+  takenFilter=f;
+  document.querySelectorAll('.filter-knop').forEach(k=>k.classList.toggle('actief',k.dataset.f===f));
+  renderTaken();
+}
+function renderTaken(){
+  const td=today();
+  let taken=[...DB.tasks];
+  if(takenFilter==='open')taken=taken.filter(t=>t.status!=='done');
+  else if(takenFilter==='vandaag')taken=taken.filter(t=>t.status!=='done'&&t.due===td);
+  else if(takenFilter==='laat')taken=taken.filter(t=>t.status!=='done'&&t.due<td);
+  else if(takenFilter==='gedaan')taken=taken.filter(t=>t.status==='done');
+  taken.sort((a,b)=>a.due.localeCompare(b.due));
+  const el=document.getElementById('takenLijst');
+  if(!el)return;
+  if(!taken.length){el.innerHTML=`<div class="leeg-state">Geen taken in deze categorie</div>`;return;}
+  el.innerHTML=taken.map(t=>taakRij(t,true)).join('');
+}
+function taakRij(t,acties=false){
+  const gedaan=t.status==='done';
+  const laat=!gedaan&&t.due<today();
+  const zn=t.zid?' \u00B7 '+zName(t.zid):'';
+  const a=acties&&!gedaan?`<button class="tr-act" onclick="uitstellen('${t.id}')">Uitstellen</button>`:'';
+  return`<div class="taak-rij ${tCls(t.type)}">
+    <div class="chk ${gedaan?'chk-aan':''}" onclick="doToggle('${t.id}')">${gedaan?'&#10003;':''}</div>
+    <div class="tr-inf">
+      <div class="tr-naam ${gedaan?'doorgestreept':''}">${laat?'<span class="laat-tag">Te laat &middot; </span>':''}${t.title}</div>
+      <div class="tr-sub">${t.due}${zn}</div>
+    </div>${a}
+  </div>`;
+}
+function uitstellen(id){const t=DB.tasks.find(x=>x.id===id);if(!t)return;t.due=addDays(t.due,1);saveDB();toast('Uitgesteld naar '+t.due);renderPage(curP);}
+function fabClick(){
+  if(curP==='pZones')openZSheet();
+  else if(curP==='pPlanten')openAddPlant();
+  else openTaskSheet();
+}
+/* ===== WEER WRAPPER ===== */
+function applyWxUI_wrapper(){
+  if(!WX)return;
+  const pill=document.getElementById('wxPill');
+  if(pill)pill.style.display='flex';
+  const ico=document.getElementById('wxIco');if(ico)ico.textContent=wIco(WX.cur.weathercode);
+  const tmp=document.getElementById('wxTemp');if(tmp)tmp.textContent=Math.round(WX.cur.temperature)+'\u00B0';
+  const r0=WX.precip[0]||0;
+  const rain=document.getElementById('wxRain');if(rain)rain.textContent=r0>1?r0.toFixed(1)+'mm':'';
+  const bel=document.getElementById('wxBanners');
+  if(bel){
+    let h='';
+    if(r0>3)h+=`<div class="wxb wxb-regen"><div class="wxb-ico">&#127783;</div><div class="wxb-body"><div class="wxb-titel">Geen water nodig vandaag</div><div class="wxb-sub">${r0.toFixed(1)} mm verwacht</div></div><button class="wxb-knop" onclick="autoSkipWater()">Overslaan</button></div>`;
+    const tm1=WX.tmin[1]??99;
+    if(tm1<2)h+=`<div class="wxb wxb-vorst"><div class="wxb-ico">&#127777;</div><div class="wxb-body"><div class="wxb-titel">Vorstrisico morgen</div><div class="wxb-sub">Min. ${tm1.toFixed(1)}\u00B0C</div></div></div>`;
+    bel.innerHTML=h;
+  }
+  renderKalStrook();
+  if(r0>5)autoSkipWater();
+}
+
+
+/* ===== PATCHES ===== */
+
+/* Fix toast ID */
+function toast(m){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=m;
+  t.classList.add('zichtbaar');
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>t.classList.remove('zichtbaar'),2700);
+}
+
+/* Fix closeAll/closeSheet */
+function closeAll(){
+  document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));
+  const bd=document.getElementById('backdrop');
+  if(bd)bd.classList.remove('open');
+}
+function closeSheet(id){
+  const s=document.getElementById(id);
+  if(s)s.classList.remove('open');
+  const bd=document.getElementById('backdrop');
+  if(bd)bd.classList.remove('open');
+}
+function openSheet(id){
+  closeAll();
+  const bd=document.getElementById('backdrop');
+  if(bd)bd.classList.add('open');
+  const s=document.getElementById(id);
+  if(s)s.classList.add('open');
+}
+
+/* Fix sluitAlles alias */
+function sluitAlles(){closeAll();}
+
+/* Fix theme */
+function applyTheme(lm){
+  document.documentElement.classList.toggle('donker',lm);
+  const tc=document.getElementById('themeColor');
+  if(tc)tc.content=lm?'#111111':'#ffffff';
+}
+function toggleTheme(){
+  const lm=!document.documentElement.classList.contains('donker');
+  localStorage.setItem('mt_theme',lm?'lm':'dm');
+  applyTheme(lm);
+}
+
+/* Fix renderZones to use new classes */
+function renderZones(){
+  const el=document.getElementById('zoneList');
+  const emp=document.getElementById('zoneEmpty');
+  if(!DB.zones.length){if(el)el.innerHTML='';if(emp)emp.style.display='block';return;}
+  if(emp)emp.style.display='none';
+  if(el)el.innerHTML=DB.zones.map(z=>{
+    const pl=DB.plants.filter(p=>p.zid===z.id);
+    const ot=DB.tasks.filter(t=>t.zid===z.id&&t.status!=='done').length;
+    const chips=pl.slice(0,5).map(p=>`<div class="zk-chip">${p.em||''} ${p.cn||p.n}</div>`).join('');
+    const meer=pl.length>5?`<div class="zk-chip">+${pl.length-5}</div>`:'';
+    return`<div class="zone-kaart" style="--z-kleur:${z.color||'var(--acc)'}" onclick="openZD('${z.id}')" >
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:${z.color||'var(--acc)'}"></div>
+      <div class="zk-naam">${z.name}</div>
+      <div class="zk-info">{{zon:'Volle zon',halfschaduw:'Halfschaduw',schaduw:'Schaduw'}[z.sun]||z.sun}${z.desc?' · '+z.desc:''}</div>
+      ${pl.length?`<div class="zk-chips">${chips}${meer}</div>`:''}
+      <div class="zk-footer">
+        <div class="zk-taken-label">${ot?ot+' open taak'+(ot>1?'en':'')+'':'Geen open taken'}</div>
+        <div class="zk-knoppen">
+          <button class="zk-btn" onclick="event.stopPropagation();openAddPlant('${z.id}')">+ Plant</button>
+          <button class="zk-btn zk-btn-del" onclick="event.stopPropagation();delZone('${z.id}')">Verwijderen</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* Fix renderZones inline template issue */
+const _origRZ=renderZones;
+function renderZones(){
+  const el=document.getElementById('zoneList');
+  const emp=document.getElementById('zoneEmpty');
+  if(!DB.zones.length){if(el)el.innerHTML='';if(emp)emp.style.display='block';return;}
+  if(emp)emp.style.display='none';
+  const zon={zon:'Volle zon',halfschaduw:'Halfschaduw',schaduw:'Schaduw'};
+  if(el)el.innerHTML=DB.zones.map(z=>{
+    const pl=DB.plants.filter(p=>p.zid===z.id);
+    const ot=DB.tasks.filter(t=>t.zid===z.id&&t.status!=='done').length;
+    const chips=pl.slice(0,5).map(p=>`<div class="zk-chip">${p.em||''} ${p.cn||p.n}</div>`).join('');
+    const meer=pl.length>5?`<div class="zk-chip">+${pl.length-5} meer</div>`:'';
+    return`<div class="zone-kaart" onclick="openZD('${z.id}')">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0;background:${z.color||'var(--acc)'}"></div>
+      <div class="zk-naam">${z.name}</div>
+      <div class="zk-info">${zon[z.sun]||z.sun}${z.desc?' \u00B7 '+z.desc:''}</div>
+      ${pl.length?`<div class="zk-chips">${chips}${meer}</div>`:''}
+      <div class="zk-footer">
+        <div class="zk-taken-label">${ot?ot+' open taak'+(ot>1?'en':'')+'':'Geen open taken'}</div>
+        <div class="zk-knoppen">
+          <button class="zk-btn" onclick="event.stopPropagation();openAddPlant('${z.id}')">+ Plant</button>
+          <button class="zk-btn zk-btn-del" onclick="event.stopPropagation();delZone('${z.id}')">Verwijderen</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* Fix renderPlanten for new classes */
+function renderPlanten(){
+  const fc=document.getElementById('plantFilter');
+  if(fc){
+    let ch=`<button class="filter-knop ${pfZ==='all'?'actief':''}" data-z="all" onclick="setPlantFilter('all')">Alle</button>`;
+    DB.zones.forEach(z=>{ch+=`<button class="filter-knop ${pfZ===z.id?'actief':''}" data-z="${z.id}" onclick="setPlantFilter('${z.id}')">${z.name}</button>`;});
+    fc.innerHTML=ch;
+  }
+  const pl=pfZ==='all'?DB.plants:DB.plants.filter(p=>p.zid===pfZ);
+  const gr=document.getElementById('plantGrid');
+  const emp=document.getElementById('plantEmpty');
+  if(!pl.length){if(gr)gr.innerHTML='';if(emp)emp.style.display='block';return;}
+  if(emp)emp.style.display='none';
+  if(gr){
+    gr.innerHTML=pl.map(p=>{
+      const z=DB.zones.find(x=>x.id===p.zid);
+      const taken=DB.tasks.filter(t=>t.pid===p.id&&t.status!=='done').sort((a,b)=>a.due.localeCompare(b.due));
+      const src=imgUrl(p);
+      const em2=p.em||'\uD83C\uDF31';
+      const tcls={water:'ptw',snoei:'pts',bemest:'ptf',maai:'ptm'};
+      const chips=taken.slice(0,3).map(t=>`<div class="${tcls[t.type]||'pto'} plant-taak-chip" onclick="event.stopPropagation();doToggle('${t.id}');renderPlanten()">${tEm(t.type)} ${tShort(t.type)} ${t.due.slice(5).replace('-','/')}</div>`).join('');
+      return`<div class="plant-kaart" onclick="openPD('${p.id}')">
+        <img class="plant-foto" data-src="${src}" src="" alt="${p.cn||p.n}">
+        <div class="plant-foto-em" style="display:none">${em2}</div>
+        <div class="plant-info">
+          <div class="plant-naam">${p.cn||p.n}</div>
+          ${p.lat?`<div class="plant-lat">${p.lat}</div>`:''}
+          ${z?`<div class="plant-zone">${z.name}</div>`:''}
+        </div>
+        ${taken.length?`<div class="plant-taken-chips">${chips}${taken.length>3?`<div class="plant-taak-chip pto">+${taken.length-3}</div>`:''}</div>`:''}
+      </div>`;
+    }).join('');
+    gr.querySelectorAll('img[data-src]').forEach(img=>{
+      const tmp=new Image();
+      tmp.onload=()=>{img.src=img.dataset.src;img.classList.add('geladen');};
+      tmp.onerror=()=>{img.style.display='none';const fb=img.nextElementSibling;if(fb)fb.style.display='flex';};
+      tmp.src=img.dataset.src;
+    });
+  }
+}
+
+/* Fix filterPDB voor nieuwe classes */
+function filterPDB(){
+  const q=document.getElementById('pSearch').value.toLowerCase();
+  let list=PDB;
+  if(_pCat!=='all')list=list.filter(p=>p.cat===_pCat);
+  if(q)list=list.filter(p=>p.n.toLowerCase().includes(q)||p.lat.toLowerCase().includes(q));
+  const el=document.getElementById('pList');
+  if(!el)return;
+  el.innerHTML=list.slice(0,40).map(p=>`<div class="plant-zoekitem" onclick="addFromPDB('${p.id}')">
+    <div class="pzi-em">${p.em||'\uD83C\uDF31'}</div>
+    <div style="flex:1;min-width:0"><div class="pzi-naam">${p.n}</div><div class="pzi-lat">${p.lat}</div></div>
+    <div class="pzi-water">&#128167; ${p.w}d</div>
+  </div>`).join('')||'<div style="padding:12px;color:var(--t2);font-size:12px">Geen resultaten</div>';
+}
+
+/* Fix setCat */
+function setCat(c){
+  _pCat=c;
+  document.querySelectorAll('#catChips .filter-knop').forEach(el=>el.classList.toggle('actief',el.dataset.c===c));
+  filterPDB();
+}
+
+/* Fix openPD */
+function openPD(pid){
+  const plant=DB.plants.find(p=>p.id===pid);if(!plant)return;
+  const pdb=plant.dbid?PDB.find(p=>p.id===plant.dbid):null;
+  const z=DB.zones.find(z=>z.id===plant.zid);
+  const tip=pdb?.tip||'';const bl=pdb?.bl||[];
+  const bar=Array.from({length:12},(_,i)=>{const m=i+1;const aan=bl.length===2&&m>=bl[0]&&m<=bl[1];return`<div class="bloei-maand ${aan?'aan':''}" ></div>`;}).join('');
+  const src=imgUrl(plant,700,180);
+  document.getElementById('pdBody').innerHTML=`
+    <img class="pd-foto" src="${src}" alt="${plant.cn||plant.n}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="pd-em" style="display:none">${plant.em||'\uD83C\uDF31'}</div>
+    <div class="pd-inhoud">
+      <div class="pd-naam">${plant.cn||plant.n}</div>
+      ${pdb?`<div class="pd-lat">${pdb.lat}</div>`:''}
+      ${z?`<div class="pd-zone">${z.name}</div>`:''}
+      <div class="pd-stats">
+        <div class="pd-stat"><div class="pd-stat-w">${(plant.sun||'zon').replace('halfschaduw','Half')}</div><div class="pd-stat-l">Zon</div></div>
+        <div class="pd-stat"><div class="pd-stat-w">${plant.wd}d</div><div class="pd-stat-l">Water</div></div>
+        <div class="pd-stat"><div class="pd-stat-w">${plant.cat||'\u2014'}</div><div class="pd-stat-l">Type</div></div>
+      </div>
+      ${tip?`<div class="tip-kader">&#128161; ${tip}</div>`:''}
+      ${bl.length?`<div style="margin-bottom:10px"><div class="veld-label">Bloeiperiode</div><div class="bloei-balk">${bar}</div></div>`:''}
+      <div class="verdeler"></div>
+      <div class="veld"><label class="veld-label">Waterfrequentie (dagen)</label><input class="veld-input" type="number" id="pd_wd" value="${plant.wd}" min="1" max="60"></div>
+      <div class="veld"><label class="veld-label">Snoeimaanden</label><div class="maand-raster" id="pd_pm">${moBtns(plant.pm)}</div></div>
+      <div class="veld"><label class="veld-label">Bemestmaanden</label><div class="maand-raster" id="pd_fm">${moBtns(plant.fm)}</div></div>
+      <button class="hoofd-knop" onclick="savePD('${pid}')">Opslaan</button>
+      <button class="gevaar-knop" onclick="delPlant('${pid}')">Plant verwijderen</button>
+    </div>`;
+  openSheet('sPD');
+}
+
+/* Fix openZD */
+function openZD(zid){
+  const z=DB.zones.find(x=>x.id===zid);if(!z)return;
+  document.getElementById('zdTitle').textContent=z.name;
+  const pl=DB.plants.filter(p=>p.zid===zid);
+  const ts=DB.tasks.filter(t=>t.zid===zid&&t.status!=='done');
+  const zon={zon:'Volle zon',halfschaduw:'Halfschaduw',schaduw:'Schaduw'};
+  document.getElementById('zdBody').innerHTML=`
+    <div class="veld-label" style="margin-bottom:6px">Planten (${pl.length})</div>
+    <div class="zd-planten">
+      ${pl.map(p=>`<div class="zd-plant" onclick="openPD('${p.id}')">${p.em||''} ${p.cn||p.n}</div>`).join('')}
+      <div class="zd-plant" style="background:var(--acc);color:#fff;border-color:var(--acc)" onclick="openAddPlant('${zid}')">+ Plant</div>
+    </div>
+    <div class="veld-label" style="margin-bottom:6px">Open taken (${ts.length})</div>
+    ${ts.map(t=>taakRij(t,true)).join('')||'<div style="color:var(--t3);font-size:12px">Geen open taken</div>'}
+    <button class="sec-knop" style="margin-top:10px" onclick="openZSheet('${zid}');closeSheet('sZD')">Zone bewerken</button>
+    <button class="gevaar-knop" onclick="delZone('${zid}');closeSheet('sZD')">Zone verwijderen</button>`;
+  openSheet('sZD');
+}
+
+/* Fix wxBody render */
+function applyWxUI(){applyWxUI_wrapper();}
+
+/* Fix weer detail sheet */
+function _buildWxBody(){
+  const dnames=['Vandaag','Morgen','Overmorgen'];
+  const dn=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+  const el=document.getElementById('wxBody');
+  if(!el||!WX)return;
+  el.innerHTML=WX.time.map((t,i)=>{
+    const d=new Date(t+'T00:00:00');
+    const nm=i<3?dnames[i]:dn[d.getDay()]+' '+d.getDate();
+    const r=WX.precip[i]||0,mx=WX.tmax[i],mn=WX.tmin[i];
+    const isFrost=mn<2,hasRain=r>1;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bor)">
+      <div style="font-size:12px;font-weight:600;color:var(--t1);width:60px">${nm}</div>
+      <div style="font-size:18px;width:24px;text-align:center">${wIco(WX.code[i])}</div>
+      <div style="font-size:15px;font-weight:600;color:var(--t0);flex:1">${Math.round(mx)}&deg; <span style="color:var(--t2);font-weight:400;font-size:12px">${Math.round(mn)}&deg;</span></div>
+      <div style="text-align:right">
+        ${hasRain?`<div style="font-size:11px;color:var(--cw);font-weight:600">&#128167; ${r.toFixed(1)} mm</div>`:''}
+        <div style="font-size:9px;font-weight:700;${isFrost?'color:var(--danger)':(!hasRain?'color:var(--acc)':'color:var(--t3)')}">
+          ${isFrost?'Vorstrisico':(!hasRain?'Water geven':'')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+const _origWx=applyWxUI_wrapper;
+function applyWxUI_wrapper(){
+  _origWx();
+  _buildWxBody();
+}
+
+/* Fix locatie tekst */
+const _origFetchWx=fetchWx;
+async function fetchWx(force=false){
+  await _origFetchWx(force);
+  const loc=document.getElementById('ftLoc');
+  if(loc&&wxLat)loc.textContent=wxLat.toFixed(2)+', '+wxLon.toFixed(2);
+}
 </script>
 </body>
 </html>
